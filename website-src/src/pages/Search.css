@@ -12,15 +12,25 @@
 .search-controls {
   max-width: 900px;
   margin: 0 auto 2rem;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.main-search-bar {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0;
+  align-items: center;
 }
 
 .search-input {
-  width: 100%;
+  flex: 1;
   padding: 1rem;
   font-size: 1.125rem;
   border: 2px solid var(--gray-300);
   border-radius: 8px;
-  margin-bottom: 1rem;
   transition: border-color 0.2s;
 }
 
@@ -29,26 +39,127 @@
   border-color: var(--red);
 }
 
-.filters {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-}
-
-.filter-select {
-  padding: 0.75rem;
-  font-size: 1rem;
+.advanced-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 1.5rem;
+  height: 54px;
+  background: white;
   border: 2px solid var(--gray-300);
   border-radius: 8px;
-  background: white;
+  font-weight: 500;
+  color: var(--gray-700);
   cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.advanced-toggle:hover {
+  background: var(--gray-100);
+  border-color: var(--gray-400);
+}
+
+.advanced-toggle.active {
+  background: var(--gray-100);
+  border-color: var(--red);
+  color: var(--red);
+}
+
+.toggle-icon {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+/* Advanced Filters Panel */
+.advanced-filters {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out, margin-top 0.3s ease;
+  opacity: 0;
+}
+
+.advanced-filters.open {
+  max-height: 500px;
+  /* approximates expanded height */
+  margin-top: 1.5rem;
+  opacity: 1;
+  overflow: visible;
+  /* allows select dropdowns to overflow if needed, but transition requires hidden/max-height */
+}
+
+/* Revert overflow for open state to avoid clipping focus rings ? No, max-height trick needs hidden. 
+   If content is dynamic, might need JS or grid transform. 
+   Let's stick to max-height for now, 500px should cover it.
+*/
+
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--gray-200);
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.filter-group label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--gray-700);
+}
+
+.filter-select,
+.filter-input {
+  padding: 0.75rem;
+  font-size: 0.95rem;
+  border: 1px solid var(--gray-300);
+  border-radius: 6px;
+  background: white;
+  width: 100%;
   transition: border-color 0.2s;
 }
 
-.filter-select:focus {
+.filter-select:focus,
+.filter-input:focus {
   outline: none;
   border-color: var(--red);
+  box-shadow: 0 0 0 3px rgba(204, 0, 0, 0.1);
 }
+
+.year-inputs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.year-inputs span {
+  color: var(--gray-500);
+}
+
+.filters-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+.clear-btn {
+  background: none;
+  border: none;
+  color: var(--gray-600);
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.clear-btn:hover {
+  color: var(--red);
+}
+
 
 .results-count {
   text-align: center;
@@ -71,12 +182,13 @@
   transition: transform 0.2s, box-shadow 0.2s;
   cursor: pointer;
   color: var(--gray-900);
+  text-decoration: none;
+  display: block;
 }
 
 .result-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-  text-decoration: none;
 }
 
 .result-card h3 {
@@ -103,25 +215,30 @@
   padding: 4rem 0;
 }
 
-.loading {
+.loading,
+.loading-more {
   text-align: center;
   font-size: 1.125rem;
-  padding: 4rem 0;
+  padding: 2rem;
+  color: var(--gray-600);
+  font-style: italic;
 }
 
 @media (max-width: 768px) {
+  .main-search-bar {
+    flex-direction: column;
+  }
+
+  .advanced-toggle {
+    width: 100%;
+    justify-content: center;
+  }
+
   .results-grid {
     grid-template-columns: 1fr;
   }
 
-  .filters {
+  .filters-grid {
     grid-template-columns: 1fr;
   }
-}
-
-.loading-more {
-  text-align: center;
-  padding: 2rem;
-  color: var(--gray-600);
-  font-style: italic;
 }

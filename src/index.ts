@@ -126,33 +126,108 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 			return jsonResponse({ place, images });
 		}
 
-		// GET /api/search?q=term - Search places
+		// GET /api/search - Unified search with filters
 		if (path === '/api/search' && request.method === 'GET') {
 			const q = url.searchParams.get('q') || '';
 			const lang = url.searchParams.get('lang') || 'en';
 			const limit = parseInt(url.searchParams.get('limit') || '50');
 			const offset = parseInt(url.searchParams.get('offset') || '0');
 
-			if (!q || q.length < 2) {
-				return jsonResponse({ error: 'Query too short' }, 400);
+			// Filters
+			const province = url.searchParams.get('province');
+			const municipality = url.searchParams.get('municipality');
+			const type = url.searchParams.get('type');
+			const jurisdiction = url.searchParams.get('jurisdiction');
+			const theme = url.searchParams.get('theme');
+			const minYear = parseInt(url.searchParams.get('min_year') || '0');
+			const maxYear = parseInt(url.searchParams.get('max_year') || '0');
+
+			// Base query
+			let query = `SELECT
+						id, name, province, municipality, latitude, longitude,
+						description, recognition_type, jurisdiction, recognition_date
+					FROM places
+					WHERE language = ?`;
+
+			const params: any[] = [lang];
+
+			// Text Search
+			if (q && q.length >= 2) {
+				query += ` AND (
+					name LIKE ?
+					OR description LIKE ?
+					OR municipality LIKE ?
+				)`;
+				const term = `%${q}%`;
+				params.push(term, term, term);
 			}
 
-			const { results } = await env.DB.prepare(`
-					SELECT
-						id, name, province, municipality, latitude, longitude,
-						description, recognition_type
-					FROM places
-					WHERE language = ?
-					AND (
-						name LIKE ?
-						OR description LIKE ?
-						OR province LIKE ?
-						OR municipality LIKE ?
-					)
-					LIMIT ? OFFSET ?
-				`).bind(lang, `%${q}%`, `%${q}%`, `%${q}%`, `%${q}%`, limit, offset).all();
+			// Apply Filters
+			if (province) {
+				query += ` AND province = ?`;
+				params.push(province);
+			}
+
+			if (municipality) {
+				query += ` AND municipality LIKE ?`;
+				params.push(`%${municipality}%`);
+			}
+
+			if (type) {
+				query += ` AND recognition_type = ?`;
+				params.push(type);
+			}
+
+			if (jurisdiction) {
+				query += ` AND jurisdiction = ?`;
+				params.push(jurisdiction);
+			}
+
+			if (theme) {
+				query += ` AND themes LIKE ?`;
+				params.push(`%${theme}%`);
+			}
+
+			if (minYear > 0) {
+				query += ` AND substr(recognition_date, 1, 4) >= ?`;
+				params.push(minYear.toString());
+			}
+
+			if (maxYear > 0) {
+				query += ` AND substr(recognition_date, 1, 4) <= ?`;
+				params.push(maxYear.toString());
+			}
+
+			// Sort and Limit
+			query += ` ORDER BY name LIMIT ? OFFSET ?`;
+			params.push(limit, offset);
+
+			const { results } = await env.DB.prepare(query).bind(...params).all();
 
 			return jsonResponse({ results, count: results.length });
+		}
+
+		// GET /api/filters - Get options for filters
+		if (path === '/api/filters' && request.method === 'GET') {
+			const lang = url.searchParams.get('lang') || 'en';
+
+			const provinces = await env.DB.prepare(`
+				SELECT DISTINCT province FROM places WHERE language = ? AND province IS NOT NULL ORDER BY province
+			`).bind(lang).all();
+
+			const types = await env.DB.prepare(`
+				SELECT DISTINCT recognition_type FROM places WHERE language = ? AND recognition_type IS NOT NULL ORDER BY recognition_type
+			`).bind(lang).all();
+
+			const jurisdictions = await env.DB.prepare(`
+				SELECT DISTINCT jurisdiction FROM places WHERE language = ? AND jurisdiction IS NOT NULL ORDER BY jurisdiction
+			`).bind(lang).all();
+
+			return jsonResponse({
+				provinces: provinces.results.map((r: any) => r.province),
+				types: types.results.map((r: any) => r.recognition_type),
+				jurisdictions: jurisdictions.results.map((r: any) => r.jurisdiction)
+			});
 		}
 
 		// GET /api/map - Get places with coordinates (for map view)

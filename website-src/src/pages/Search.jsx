@@ -6,69 +6,85 @@ import './Search.css'
 function Search({ language }) {
   const [searchTerm, setSearchTerm] = useState('')
   const [results, setResults] = useState([])
-  const [filters, setFilters] = useState({
-    province: '',
-    type: ''
-  })
   const [loading, setLoading] = useState(false)
-  const [provinces, setProvinces] = useState([])
   const [offset, setOffset] = useState(0)
   const [hasMore, setHasMore] = useState(true)
+  const [showAdvanced, setShowAdvanced] = useState(false)
+
+  // Filters State
+  const [filters, setFilters] = useState({
+    province: '',
+    municipality: '',
+    type: '',
+    jurisdiction: '',
+    theme: '',
+    min_year: '',
+    max_year: ''
+  })
+
+  // Options State
+  const [options, setOptions] = useState({
+    provinces: [],
+    types: [],
+    jurisdictions: []
+  })
 
   const observer = useRef()
   const LIMIT = 50
 
-  // Load provinces for filter
+  // Load filter options
   useEffect(() => {
-    fetch(`${config.endpoints.provinces}?lang=${language}`)
+    // We can use the new /api/filters endpoint
+    fetch(`${config.endpoints.api}/filters?lang=${language}`)
       .then(res => res.json())
       .then(data => {
-        setProvinces(data.provinces || [])
+        setOptions({
+          provinces: data.provinces || [],
+          types: data.types || [],
+          jurisdictions: data.jurisdictions || []
+        })
       })
       .catch(err => {
-        console.error('Error loading provinces:', err)
+        console.error('Error loading filters:', err)
+        // Fallback to old provinces endpoint if new one fails (during transition)
+        fetch(`${config.endpoints.provinces}?lang=${language}`)
+          .then(res => res.json())
+          .then(data => setOptions(prev => ({ ...prev, provinces: data.provinces?.map(p => p.province) || [] })))
+          .catch(e => console.error('Fallback failed', e))
       })
   }, [language])
 
   const performSearch = useCallback((currentOffset, isNewSearch) => {
-    // Determine which API endpoint to use
-    // If searchTerm is >= 2 chars, use /api/search
-    // Otherwise use /api/places (unless term is 1 char, then we might want to wait or show nothing?)
+    let url = `${config.endpoints.search}?lang=${language}&limit=${LIMIT}&offset=${currentOffset}`
 
-    // Logic from original:
-    // 1. If no search term and no filters -> fetch all (now /api/places with limit)
-    // 2. If search term >= 2 -> /api/search
-    // 3. If filters active -> /api/places
-
-    let url = ''
-    const hasSearchTerm = searchTerm && searchTerm.length >= 2
-
-    if (hasSearchTerm) {
-      url = `${config.endpoints.search}?q=${encodeURIComponent(searchTerm)}&lang=${language}&limit=${LIMIT}&offset=${currentOffset}`
-      if (filters.province) url += `&province=${encodeURIComponent(filters.province)}`
-      if (filters.type) url += `&type=${encodeURIComponent(filters.type)}`
-    } else {
-      // If we have a 1-char search term and no filters, maybe we shouldn't search?
-      // Original code cleared results if else.
-      if (searchTerm && searchTerm.length < 2 && !filters.province && !filters.type) {
-        if (isNewSearch) setResults([])
-        return
-      }
-
-      url = `${config.endpoints.places}?lang=${language}&limit=${LIMIT}&offset=${currentOffset}`
-      if (filters.province) url += `&province=${encodeURIComponent(filters.province)}`
-      if (filters.type) url += `&type=${encodeURIComponent(filters.type)}`
+    if (searchTerm && searchTerm.length >= 2) {
+      url += `&q=${encodeURIComponent(searchTerm)}`
     }
+
+    // Add all filters
+    Object.keys(filters).forEach(key => {
+      if (filters[key]) {
+        url += `&${key}=${encodeURIComponent(filters[key])}`
+      }
+    })
+
+    // If no search term and no filters, we can still load all places via this endpoint now 
+    // because we updated the backend to handle empty q if filters are present OR just load all if nothing is present logic?
+    // Actually the backend code:
+    // SELECT ... WHERE language=?
+    // if (q) AND ...
+    // if (province) AND ...
+    // So if nothing matches, it returns ALL places with limit. Perfect.
 
     setLoading(true)
     fetch(url)
       .then(res => res.json())
       .then(data => {
-        const newResults = data.results || data.places || []
+        const newResults = data.results || []
 
         setResults(prev => {
           if (isNewSearch) return newResults
-          // Filter out duplicates just in case
+          // Filter out duplicates
           const existingIds = new Set(prev.map(p => p.id))
           const uniqueNewResults = newResults.filter(p => !existingIds.has(p.id))
           return [...prev, ...uniqueNewResults]
@@ -83,12 +99,15 @@ function Search({ language }) {
       })
   }, [searchTerm, filters, language])
 
-  // Trigger search on inputs change
+  // Debounce search when typing
   useEffect(() => {
-    setOffset(0)
-    setHasMore(true)
-    performSearch(0, true)
-  }, [performSearch])
+    const timer = setTimeout(() => {
+      setOffset(0)
+      setHasMore(true)
+      performSearch(0, true)
+    }, 500)
+    return () => clearTimeout(timer)
+  }, [searchTerm, filters, performSearch])
 
   // Infinite scroll observer
   const lastElementRef = useCallback(node => {
@@ -108,28 +127,59 @@ function Search({ language }) {
     if (node) observer.current.observe(node)
   }, [loading, hasMore, performSearch])
 
+  const handleFilterChange = (key, value) => {
+    setFilters(prev => ({ ...prev, [key]: value }))
+  }
+
+  const clearFilters = () => {
+    setFilters({
+      province: '',
+      municipality: '',
+      type: '',
+      jurisdiction: '',
+      theme: '',
+      min_year: '',
+      max_year: ''
+    })
+    setSearchTerm('')
+  }
+
   const text = {
     en: {
       title: 'Search Historic Places',
-      searchPlaceholder: 'Search by name or location...',
+      searchPlaceholder: 'Search by name, description...',
       province: 'Province/Territory',
+      municipality: 'Municipality',
+      type: 'Recognition Type',
       jurisdiction: 'Jurisdiction',
-      type: 'Type',
+      theme: 'Theme / Keyword',
+      yearRange: 'Year Range',
+      minYear: 'Min Year',
+      maxYear: 'Max Year',
       all: 'All',
-      results: 'results',
+      results: 'results found',
       noResults: 'No results found. Try adjusting your search.',
-      loading: 'Loading...'
+      loading: 'Loading...',
+      advanced: 'Advanced Filters',
+      clear: 'Clear All'
     },
     fr: {
       title: 'Rechercher des lieux patrimoniaux',
-      searchPlaceholder: 'Rechercher par nom ou emplacement...',
+      searchPlaceholder: 'Rechercher par nom, description...',
       province: 'Province/Territoire',
+      municipality: 'Municipalité',
+      type: 'Type de reconnaissance',
       jurisdiction: 'Juridiction',
-      type: 'Type',
+      theme: 'Thème / Mot-clé',
+      yearRange: 'Année',
+      minYear: 'Année min',
+      maxYear: 'Année max',
       all: 'Tous',
-      results: 'résultats',
-      noResults: 'Aucun résultat trouvé. Essayez d\'ajuster votre recherche.',
-      loading: 'Chargement...'
+      results: 'résultats trouvés',
+      noResults: 'Aucun résultat trouvé.',
+      loading: 'Chargement...',
+      advanced: 'Filtres avancés',
+      clear: 'Effacer tout'
     }
   }
 
@@ -141,38 +191,128 @@ function Search({ language }) {
         <h2>{t.title}</h2>
 
         <div className="search-controls">
-          <input
-            type="text"
-            className="search-input"
-            placeholder={t.searchPlaceholder}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-
-          <div className="filters">
-            <select
-              value={filters.province}
-              onChange={(e) => setFilters({ ...filters, province: e.target.value })}
-              className="filter-select"
+          <div className="main-search-bar">
+            <input
+              type="text"
+              className="search-input"
+              placeholder={t.searchPlaceholder}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <button
+              className={`advanced-toggle ${showAdvanced ? 'active' : ''}`}
+              onClick={() => setShowAdvanced(!showAdvanced)}
             >
-              <option value="">{t.province} - {t.all}</option>
-              {provinces.map(prov => (
-                <option key={prov.province} value={prov.province}>{prov.province} ({prov.count})</option>
-              ))}
-            </select>
+              {t.advanced}
+              <span className="toggle-icon">{showAdvanced ? '−' : '+'}</span>
+            </button>
+          </div>
+
+          <div className={`advanced-filters ${showAdvanced ? 'open' : ''}`}>
+            <div className="filters-grid">
+
+              {/* Province */}
+              <div className="filter-group">
+                <label>{t.province}</label>
+                <select
+                  value={filters.province}
+                  onChange={(e) => handleFilterChange('province', e.target.value)}
+                  className="filter-select"
+                >
+                  <option value="">{t.all}</option>
+                  {options.provinces.map(p => (
+                    <option key={p} value={p}>{p}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Jurisdiction */}
+              <div className="filter-group">
+                <label>{t.jurisdiction}</label>
+                <select
+                  value={filters.jurisdiction}
+                  onChange={(e) => handleFilterChange('jurisdiction', e.target.value)}
+                  className="filter-select"
+                >
+                  <option value="">{t.all}</option>
+                  {options.jurisdictions.map(j => (
+                    <option key={j} value={j}>{j}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Type */}
+              <div className="filter-group">
+                <label>{t.type}</label>
+                <select
+                  value={filters.type}
+                  onChange={(e) => handleFilterChange('type', e.target.value)}
+                  className="filter-select"
+                >
+                  <option value="">{t.all}</option>
+                  {options.types.map(type => (
+                    <option key={type} value={type}>{type}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Municipality */}
+              <div className="filter-group">
+                <label>{t.municipality}</label>
+                <input
+                  type="text"
+                  value={filters.municipality}
+                  onChange={(e) => handleFilterChange('municipality', e.target.value)}
+                  className="filter-input"
+                  placeholder={t.municipality}
+                />
+              </div>
+
+              {/* Theme */}
+              <div className="filter-group">
+                <label>{t.theme}</label>
+                <input
+                  type="text"
+                  value={filters.theme}
+                  onChange={(e) => handleFilterChange('theme', e.target.value)}
+                  className="filter-input"
+                  placeholder={t.theme}
+                />
+              </div>
+
+              {/* Years */}
+              <div className="filter-group year-group">
+                <label>{t.yearRange}</label>
+                <div className="year-inputs">
+                  <input
+                    type="number"
+                    value={filters.min_year}
+                    onChange={(e) => handleFilterChange('min_year', e.target.value)}
+                    className="filter-input"
+                    placeholder="Min"
+                  />
+                  <span>-</span>
+                  <input
+                    type="number"
+                    value={filters.max_year}
+                    onChange={(e) => handleFilterChange('max_year', e.target.value)}
+                    className="filter-input"
+                    placeholder="Max"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="filters-actions">
+              <button className="clear-btn" onClick={clearFilters}>
+                {t.clear}
+              </button>
+            </div>
           </div>
         </div>
 
         <div className="results-count">
-          {/* Note: This count might be misleading now as it's the fetched count, not total. 
-               The API returns 'count' which is usually the page count or total? 
-               In index.ts:
-               jsonResponse({ results, count: results.length });
-               So it's just the length of current page. 
-               If we want total count, we'd need a separate query, but let's just show loaded count or nothing.
-               Let's show "Showing X results"
-           */}
-          Showing {results.length} {t.results}
+          {loading && results.length === 0 ? '' : `${results.length} ${t.results}`}
         </div>
 
         {results.length === 0 && !loading ? (
