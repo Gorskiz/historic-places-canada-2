@@ -6,7 +6,7 @@ import './Home.css'
 function Home({ language }) {
   const [stats, setStats] = useState(null)
   const [visibleSection, setVisibleSection] = useState(0)
-  const [animatedStats, setAnimatedStats] = useState({ total: 0, provinces: 0, themes: 0 })
+  const [animatedStats, setAnimatedStats] = useState({ total: 0, provinces: 0, themes: 0, images: 0 })
   const [featuredPlaces, setFeaturedPlaces] = useState([])
   const [currentSlide, setCurrentSlide] = useState(0)
   const [isAutoPlaying, setIsAutoPlaying] = useState(true)
@@ -126,6 +126,7 @@ function Home({ language }) {
     animateValue(0, stats.totalPlaces || 13000, 'total')
     animateValue(0, stats.provinces || 13, 'provinces')
     animateValue(0, parseInt(stats.themes) || 50, 'themes')
+    animateValue(0, stats.totalImages || 8500, 'images')
   }, [stats])
 
   const text = {
@@ -149,7 +150,8 @@ function Home({ language }) {
       bilingualDesc: 'Full content in English and French',
       total: 'Total Places',
       provinces: 'Provinces & Territories',
-      themes: 'Heritage Themes'
+      themes: 'Heritage Themes',
+      images: 'Total Images'
     },
     fr: {
       hero: 'Préserver le patrimoine canadien',
@@ -171,7 +173,8 @@ function Home({ language }) {
       bilingualDesc: 'Contenu complet en anglais et en français',
       total: 'Lieux totaux',
       provinces: 'Provinces et territoires',
-      themes: 'Thèmes patrimoniaux'
+      themes: 'Thèmes patrimoniaux',
+      images: 'Images totales'
     }
   }
 
@@ -325,6 +328,17 @@ function Home({ language }) {
                   </div>
                   <div className="stat-value">{animatedStats.total.toLocaleString()}</div>
                   <div className="stat-label">{t.total}</div>
+                </div>
+                <div className="stat">
+                  <div className="stat-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                      <polyline points="21 15 16 10 5 21"></polyline>
+                    </svg>
+                  </div>
+                  <div className="stat-value">{animatedStats.images.toLocaleString()}</div>
+                  <div className="stat-label">{t.images}</div>
                 </div>
                 <div className="stat">
                   <div className="stat-icon">
