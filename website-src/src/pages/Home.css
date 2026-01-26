@@ -156,10 +156,8 @@
 
 .title-line {
   display: inline-block;
-  background: linear-gradient(135deg, #fff 0%, #ffd1d1 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #ffffff;
+  padding: 0 0.1em;
 }
 
 .hero-subtitle {
@@ -406,9 +404,10 @@
   height: 100%;
   background: linear-gradient(
     to bottom,
-    rgba(26, 0, 8, 0.3) 0%,
-    rgba(26, 0, 8, 0.5) 50%,
-    rgba(26, 0, 8, 0.9) 100%
+    rgba(26, 0, 8, 0.4) 0%,
+    rgba(26, 0, 8, 0.6) 40%,
+    rgba(26, 0, 8, 0.85) 70%,
+    rgba(26, 0, 8, 0.95) 100%
   );
   z-index: 1;
 }
@@ -446,8 +445,12 @@
   line-height: 1.1;
   letter-spacing: -0.02em;
   margin-bottom: 1rem;
-  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  text-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.9),
+    0 4px 8px rgba(0, 0, 0, 0.7),
+    0 8px 16px rgba(0, 0, 0, 0.6);
   max-width: 900px;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.8));
 }
 
 .carousel-location {
@@ -455,9 +458,11 @@
   align-items: center;
   gap: 0.5rem;
   font-size: clamp(1rem, 2vw, 1.25rem);
-  opacity: 0.95;
   margin-bottom: 2rem;
   font-weight: 500;
+  text-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.9),
+    0 4px 8px rgba(0, 0, 0, 0.7);
 }
 
 .carousel-location svg {
@@ -589,17 +594,30 @@
 .hero-headline .hero-title {
   font-size: clamp(2.5rem, 6vw, 5rem);
   margin-bottom: 1rem;
-  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.7);
+  text-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.8),
+    0 4px 8px rgba(0, 0, 0, 0.6),
+    0 8px 16px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(0, 0, 0, 0.4);
   animation: slideUp 0.8s ease-out;
+  padding: 0.2em 0;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.8));
 }
 
 .hero-headline .hero-subtitle {
   font-size: clamp(1.125rem, 2.5vw, 1.75rem);
-  opacity: 0.95;
   max-width: 700px;
   margin: 0 auto;
-  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.7);
+  text-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.9),
+    0 4px 8px rgba(0, 0, 0, 0.7),
+    0 8px 16px rgba(0, 0, 0, 0.6);
   animation: slideUp 0.8s ease-out 0.2s both;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+  display: inline-block;
 }
 
 /* Hero Actions Section */
@@ -866,6 +884,7 @@
 
   .hero-headline .hero-subtitle {
     font-size: clamp(1rem, 2.5vw, 1.25rem);
+    padding: 0.625rem 1.25rem;
   }
 
   .hero-actions {
@@ -982,6 +1001,7 @@
 
   .hero-headline .hero-subtitle {
     font-size: clamp(0.875rem, 2.5vw, 1.125rem);
+    padding: 0.5rem 1rem;
   }
 
   .hero-actions {
