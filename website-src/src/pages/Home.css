@@ -283,7 +283,7 @@
   height: 80vh;
   min-height: 600px;
   max-height: 900px;
-  flex: 1;
+  flex-shrink: 0;
   z-index: 1;
 }
 
@@ -291,6 +291,7 @@
   position: relative;
   width: 100%;
   height: 100%;
+  min-height: 600px;
   overflow: hidden;
 }
 
@@ -300,6 +301,7 @@
   left: 0;
   width: 100%;
   height: 100%;
+  min-height: 600px;
   opacity: 0;
   transition: opacity 1s ease-in-out, transform 1s ease-in-out;
   pointer-events: none;
@@ -329,6 +331,7 @@
   left: 0;
   width: 100%;
   height: 100%;
+  min-height: 600px;
   overflow: hidden;
   z-index: 0;
 }
