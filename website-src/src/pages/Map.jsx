@@ -116,8 +116,8 @@ function Map({ language }) {
           zoomControl={false} // We will add it manually to position it better if needed
           minZoom={3}
           maxBounds={[
-            [41.0, -142.0], // Southwest
-            [84.0, -50.0]   // Northeast (Rough bounds of Canada)
+            [35.0, -145.0], // Southwest (Allows scrolling into US)
+            [85.0, -50.0]   // Northeast
           ]}
         >
           <TileLayer
