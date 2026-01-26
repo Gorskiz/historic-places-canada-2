@@ -1,9 +1,11 @@
 {
-	"name": "historic-canada-api",
-	"version": "0.0.0",
+	"name": "historic-places-canada",
+	"version": "1.0.0",
 	"private": true,
+	"description": "Full-stack Historic Places Canada app on Cloudflare Workers",
 	"scripts": {
-		"deploy": "wrangler deploy",
+		"build": "node build.js",
+		"deploy": "npm run build && wrangler deploy",
 		"dev": "wrangler dev",
 		"start": "wrangler dev",
 		"test": "vitest",
