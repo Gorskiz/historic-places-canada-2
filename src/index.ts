@@ -78,25 +78,43 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 			const limit = parseInt(url.searchParams.get('limit') || '100');
 			const offset = parseInt(url.searchParams.get('offset') || '0');
 
-			let query = `SELECT
-					id, name, province, municipality, latitude, longitude,
-					recognition_type, jurisdiction
-					FROM places
-					WHERE language = ?`;
+			const nameField = lang === 'fr' ? 'name_fr' : 'name_en';
 
-			const params: any[] = [lang];
+			let query = `SELECT DISTINCT
+					p.id,
+					p.${nameField} as name_${lang},
+					p.name_en,
+					p.name_fr,
+					p.province_territory,
+					p.municipality,
+					p.latitude,
+					p.longitude,
+					p.recognition_type,
+					p.jurisdiction,
+					(SELECT url FROM place_images WHERE place_id = p.id ORDER BY sort_order LIMIT 1) as primary_image
+					FROM places p`;
+
+			const conditions: string[] = [];
+			const params: any[] = [];
 
 			if (province) {
-				query += ` AND province = ?`;
+				conditions.push(`p.province_territory = ?`);
 				params.push(province);
 			}
 
 			if (type) {
-				query += ` AND recognition_type = ?`;
+				conditions.push(`p.recognition_type = ?`);
 				params.push(type);
 			}
 
-			query += ` ORDER BY name LIMIT ? OFFSET ?`;
+			// Only include places with images
+			conditions.push(`(SELECT COUNT(*) FROM place_images WHERE place_id = p.id) > 0`);
+
+			if (conditions.length > 0) {
+				query += ` WHERE ` + conditions.join(' AND ');
+			}
+
+			query += ` ORDER BY p.${nameField} LIMIT ? OFFSET ?`;
 			params.push(limit, offset);
 
 			const { results } = await env.DB.prepare(query).bind(...params).all();

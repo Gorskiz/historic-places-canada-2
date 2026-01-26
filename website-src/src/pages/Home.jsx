@@ -7,7 +7,11 @@ function Home({ language }) {
   const [stats, setStats] = useState(null)
   const [visibleSection, setVisibleSection] = useState(0)
   const [animatedStats, setAnimatedStats] = useState({ total: 0, provinces: 0, themes: 0 })
+  const [featuredPlaces, setFeaturedPlaces] = useState([])
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true)
   const sectionRefs = [useRef(null), useRef(null), useRef(null), useRef(null)]
+  const autoPlayRef = useRef(null)
 
   useEffect(() => {
     fetch(`${config.endpoints.stats}?lang=${language}`)
@@ -15,6 +19,51 @@ function Home({ language }) {
       .then(data => setStats(data))
       .catch(err => console.error('Error loading stats:', err))
   }, [language])
+
+  // Fetch featured places with images
+  useEffect(() => {
+    fetch(`${config.endpoints.places}?lang=${language}&limit=12`)
+      .then(res => res.json())
+      .then(data => {
+        // Filter places that have images
+        const placesWithImages = data.places.filter(place => place.primary_image)
+        setFeaturedPlaces(placesWithImages.slice(0, 8))
+      })
+      .catch(err => console.error('Error loading featured places:', err))
+  }, [language])
+
+  // Auto-play carousel
+  useEffect(() => {
+    if (isAutoPlaying && featuredPlaces.length > 0) {
+      autoPlayRef.current = setInterval(() => {
+        setCurrentSlide(prev => (prev + 1) % featuredPlaces.length)
+      }, 5000) // Change slide every 5 seconds
+    }
+
+    return () => {
+      if (autoPlayRef.current) {
+        clearInterval(autoPlayRef.current)
+      }
+    }
+  }, [isAutoPlaying, featuredPlaces.length])
+
+  const goToSlide = (index) => {
+    setCurrentSlide(index)
+    setIsAutoPlaying(false)
+    setTimeout(() => setIsAutoPlaying(true), 10000) // Resume auto-play after 10s
+  }
+
+  const nextSlide = () => {
+    setCurrentSlide(prev => (prev + 1) % featuredPlaces.length)
+    setIsAutoPlaying(false)
+    setTimeout(() => setIsAutoPlaying(true), 10000)
+  }
+
+  const prevSlide = () => {
+    setCurrentSlide(prev => (prev - 1 + featuredPlaces.length) % featuredPlaces.length)
+    setIsAutoPlaying(false)
+    setTimeout(() => setIsAutoPlaying(true), 10000)
+  }
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -66,6 +115,9 @@ function Home({ language }) {
       hero: 'Preserving Canadian Heritage',
       subtitle: 'Explore over 13,000 historic places across Canada',
       cta: 'Start Exploring',
+      viewPlace: 'View Details',
+      featuredPlaces: 'Featured Historic Places',
+      loading: 'Loading...',
       about: 'About This Project',
       aboutText: 'In 2026, Parks Canada announced the closure of HistoricPlaces.ca without preserving its invaluable database of over 13,000 historic sites. This community-led project was created to rescue and preserve this irreplaceable cultural heritage data for future generations.',
       why: 'Why This Matters',
@@ -85,6 +137,9 @@ function Home({ language }) {
       hero: 'Préserver le patrimoine canadien',
       subtitle: 'Explorez plus de 13 000 lieux patrimoniaux à travers le Canada',
       cta: 'Commencer l\'exploration',
+      viewPlace: 'Voir les détails',
+      featuredPlaces: 'Lieux historiques en vedette',
+      loading: 'Chargement...',
       about: 'À propos de ce projet',
       aboutText: 'En 2026, Parcs Canada a annoncé la fermeture de LieuxPatrimoniaux.ca sans préserver sa précieuse base de données de plus de 13 000 sites historiques. Ce projet communautaire a été créé pour sauver et préserver ces données patrimoniales irremplaçables pour les générations futures.',
       why: 'Pourquoi c\'est important',
@@ -112,12 +167,113 @@ function Home({ language }) {
           <div className="gradient-blob blob-2"></div>
           <div className="gradient-blob blob-3"></div>
         </div>
-        <div className="container">
-          <div className="hero-content">
-            <h2 className="hero-title">
-              <span className="title-line">{t.hero}</span>
-            </h2>
-            <p className="hero-subtitle">{t.subtitle}</p>
+
+        {/* Featured Places Carousel */}
+        {featuredPlaces.length > 0 ? (
+          <div className="carousel-container">
+            <div className="carousel-slides">
+              {featuredPlaces.map((place, index) => (
+                <div
+                  key={place.id}
+                  className={`carousel-slide ${index === currentSlide ? 'active' : ''} ${
+                    index === (currentSlide - 1 + featuredPlaces.length) % featuredPlaces.length ? 'prev' : ''
+                  } ${index === (currentSlide + 1) % featuredPlaces.length ? 'next' : ''}`}
+                >
+                  <div className="carousel-image-wrapper">
+                    <img
+                      src={place.primary_image}
+                      alt={place.name_en || place.name_fr || 'Historic place'}
+                      className="carousel-image"
+                    />
+                    <div className="carousel-overlay"></div>
+                  </div>
+                  <div className="carousel-content">
+                    <div className="carousel-badge">
+                      {place.province_territory || 'Canada'}
+                    </div>
+                    <h2 className="carousel-title">
+                      {language === 'en' ? (place.name_en || place.name_fr) : (place.name_fr || place.name_en)}
+                    </h2>
+                    {place.municipality && (
+                      <p className="carousel-location">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                          <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        {place.municipality}
+                      </p>
+                    )}
+                    <Link
+                      to={`/place/${place.id}`}
+                      className="carousel-cta"
+                      onClick={() => setIsAutoPlaying(false)}
+                    >
+                      <span>{t.viewPlace}</span>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                      </svg>
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Navigation Arrows */}
+            <button
+              className="carousel-nav carousel-prev"
+              onClick={prevSlide}
+              aria-label="Previous slide"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+            <button
+              className="carousel-nav carousel-next"
+              onClick={nextSlide}
+              aria-label="Next slide"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+
+            {/* Dots Navigation */}
+            <div className="carousel-dots">
+              {featuredPlaces.map((_, index) => (
+                <button
+                  key={index}
+                  className={`carousel-dot ${index === currentSlide ? 'active' : ''}`}
+                  onClick={() => goToSlide(index)}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
+            </div>
+
+            {/* Headline Overlay */}
+            <div className="hero-headline">
+              <h1 className="hero-title">
+                <span className="title-line">{t.hero}</span>
+              </h1>
+              <p className="hero-subtitle">{t.subtitle}</p>
+            </div>
+          </div>
+        ) : (
+          <div className="container">
+            <div className="hero-content">
+              <h2 className="hero-title">
+                <span className="title-line">{t.hero}</span>
+              </h2>
+              <p className="hero-subtitle">{t.subtitle}</p>
+              <div className="hero-loading">{t.loading}</div>
+            </div>
+          </div>
+        )}
+
+        {/* CTA Buttons */}
+        <div className="hero-actions">
+          <div className="container">
             <div className="hero-buttons">
               <Link to="/search" className="cta-button primary">
                 <span>{t.cta}</span>
@@ -133,8 +289,13 @@ function Home({ language }) {
                 <span>{t.mapTitle}</span>
               </Link>
             </div>
+          </div>
+        </div>
 
-            {stats && (
+        {/* Stats Section */}
+        {stats && (
+          <div className="hero-stats-section">
+            <div className="container">
               <div className="stats">
                 <div className="stat">
                   <div className="stat-icon">
@@ -166,9 +327,9 @@ function Home({ language }) {
                   <div className="stat-label">{t.themes}</div>
                 </div>
               </div>
-            )}
+            </div>
           </div>
-        </div>
+        )}
       </section>
 
       <section className="section section-about" ref={sectionRefs[0]}>
