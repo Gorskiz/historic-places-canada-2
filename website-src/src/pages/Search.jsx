@@ -34,7 +34,7 @@ function Search({ language }) {
     // If no search term and no filters, fetch all places
     if (!searchTerm && !filters.province && !filters.type) {
       setLoading(true)
-      fetch(`${config.endpoints.places}?lang=${language}&limit=1000`)
+      fetch(`${config.endpoints.places}?lang=${language}&limit=10000`)
         .then(res => res.json())
         .then(data => {
           setResults(data.places || [])
@@ -68,7 +68,7 @@ function Search({ language }) {
     } else if (filters.province || filters.type) {
       // Filter only (no search term)
       setLoading(true)
-      let url = `${config.endpoints.places}?lang=${language}&limit=1000`
+      let url = `${config.endpoints.places}?lang=${language}&limit=10000`
 
       if (filters.province) url += `&province=${encodeURIComponent(filters.province)}`
       if (filters.type) url += `&type=${encodeURIComponent(filters.type)}`
