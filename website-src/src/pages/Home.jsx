@@ -192,17 +192,17 @@ function Home({ language }) {
                   <div className="carousel-image-wrapper">
                     <img
                       src={place.primary_image}
-                      alt={place.name_en || place.name_fr || 'Historic place'}
+                      alt={place.name || 'Historic place'}
                       className="carousel-image"
                     />
                     <div className="carousel-overlay"></div>
                   </div>
                   <div className="carousel-content">
                     <div className="carousel-badge">
-                      {place.province_territory || 'Canada'}
+                      {place.province || 'Canada'}
                     </div>
                     <h2 className="carousel-title">
-                      {language === 'en' ? (place.name_en || place.name_fr) : (place.name_fr || place.name_en)}
+                      {place.name}
                     </h2>
                     {place.municipality && (
                       <p className="carousel-location">

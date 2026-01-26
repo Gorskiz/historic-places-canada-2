@@ -80,22 +80,21 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 
 			let query = `SELECT DISTINCT
 					p.id,
-					p.name_en,
-					p.name_fr,
-					p.province_territory,
+					p.name,
+					p.province,
 					p.municipality,
 					p.latitude,
 					p.longitude,
 					p.recognition_type,
 					p.jurisdiction,
-					(SELECT url FROM place_images WHERE place_id = p.id ORDER BY sort_order LIMIT 1) as primary_image
+					(SELECT r2_url FROM images WHERE place_id = p.id ORDER BY display_order LIMIT 1) as primary_image
 					FROM places p`;
 
-			const conditions: string[] = [];
-			const params: any[] = [];
+			const conditions: string[] = ['p.language = ?'];
+			const params: any[] = [lang];
 
 			if (province) {
-				conditions.push(`p.province_territory = ?`);
+				conditions.push(`p.province = ?`);
 				params.push(province);
 			}
 
@@ -105,18 +104,10 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 			}
 
 			// Only include places with images
-			conditions.push(`(SELECT COUNT(*) FROM place_images WHERE place_id = p.id) > 0`);
+			conditions.push(`(SELECT COUNT(*) FROM images WHERE place_id = p.id) > 0`);
 
-			if (conditions.length > 0) {
-				query += ` WHERE ` + conditions.join(' AND ');
-			}
-
-			// Order by the appropriate language field
-			if (lang === 'fr') {
-				query += ` ORDER BY COALESCE(p.name_fr, p.name_en) LIMIT ? OFFSET ?`;
-			} else {
-				query += ` ORDER BY p.name_en LIMIT ? OFFSET ?`;
-			}
+			query += ` WHERE ` + conditions.join(' AND ');
+			query += ` ORDER BY p.name LIMIT ? OFFSET ?`;
 			params.push(limit, offset);
 
 			const { results } = await env.DB.prepare(query).bind(...params).all();
