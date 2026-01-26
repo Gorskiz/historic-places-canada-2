@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
 import { useState } from 'react'
+import ScrollToTop from './components/ScrollToTop'
 import Home from './pages/Home'
 import Search from './pages/Search'
 import Map from './pages/Map'
@@ -35,6 +36,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <div className="app">
         <header className="header">
           <div className="container">
