@@ -19,7 +19,7 @@ console.log('🏗️  Building Historic Places Canada (Unified Worker)\n');
 // Step 1: Install website dependencies
 console.log('1️⃣  Installing website dependencies...');
 try {
-  execSync('npm install', {
+  execSync('npm install --legacy-peer-deps', {
     cwd: WEBSITE_DIR,
     stdio: 'inherit'
   });
