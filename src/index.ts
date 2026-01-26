@@ -267,7 +267,7 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 				params.push(minLat, maxLat, minLng, maxLng);
 			}
 
-			query += ` LIMIT 5000`;
+			query += ` LIMIT 100000`;
 
 			const { results } = await env.DB.prepare(query).bind(...params).all();
 			return jsonResponse({ places: results, count: results.length });
