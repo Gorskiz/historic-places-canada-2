@@ -14,7 +14,7 @@ function About({ language }) {
         'Complete descriptions and heritage values',
         'Character-defining elements',
         'Geographic coordinates for mapping',
-        'Historical photographs and documentation',
+        '55,000+ historical photographs',
         'Recognition and jurisdiction information',
         'Full bilingual content'
       ],
@@ -23,15 +23,15 @@ function About({ language }) {
       techPoints: [
         'React for a fast, responsive interface',
         'Leaflet for interactive mapping',
-        'Full-text search with Fuse.js',
-        'Static site generation for easy hosting',
+        'Full-text database search for modern performance',
+        'Database-driven architecture for efficient data management',
         'Mobile-responsive design',
-        'No database required - runs anywhere'
+        'Fast search with optimized database queries'
       ],
       openSource: 'Open Source & Preservation',
       openSourceText: 'This project is completely open source. The code, data, and deployment tools are all publicly available. Anyone can:',
       openSourcePoints: [
-        'Download the complete dataset',
+        'Download the complete database (January 2026 snapshot)',
         'Host their own mirror of the site',
         'Contribute improvements',
         'Build alternative interfaces',
@@ -57,7 +57,7 @@ function About({ language }) {
         'Descriptions complètes et valeurs patrimoniales',
         'Éléments caractéristiques',
         'Coordonnées géographiques pour la cartographie',
-        'Photographies historiques et documentation',
+        'Plus de 55 000 photographies historiques',
         'Informations sur la reconnaissance et la juridiction',
         'Contenu bilingue complet'
       ],
@@ -66,15 +66,15 @@ function About({ language }) {
       techPoints: [
         'React pour une interface rapide et réactive',
         'Leaflet pour la cartographie interactive',
-        'Recherche en texte intégral avec Fuse.js',
-        'Génération de site statique pour un hébergement facile',
+        'Recherche en texte intégral dans la base de données pour des performances modernes',
+        'Architecture pilotée par base de données pour une gestion efficace des données',
         'Design adaptatif pour mobile',
-        'Aucune base de données requise - fonctionne partout'
+        'Recherche rapide avec des requêtes de base de données optimisées'
       ],
       openSource: 'Source ouverte et préservation',
       openSourceText: 'Ce projet est entièrement open source. Le code, les données et les outils de déploiement sont tous accessibles publiquement. Tout le monde peut:',
       openSourcePoints: [
-        'Télécharger l\'ensemble complet des données',
+        'Télécharger la base de données complète (instantané de janvier 2026)',
         'Héberger son propre miroir du site',
         'Contribuer des améliorations',
         'Créer des interfaces alternatives',
