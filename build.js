@@ -11,7 +11,7 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-const WEBSITE_DIR = path.join(__dirname, '..', 'website');
+const WEBSITE_DIR = path.join(__dirname, 'website-src');
 const PUBLIC_DIR = path.join(__dirname, 'public');
 
 console.log('🏗️  Building Historic Places Canada (Unified Worker)\n');

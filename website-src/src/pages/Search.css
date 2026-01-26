@@ -1,0 +1,120 @@
+.search-page {
+  padding: 2rem 0;
+  min-height: calc(100vh - 200px);
+}
+
+.search-page h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.search-controls {
+  max-width: 900px;
+  margin: 0 auto 2rem;
+}
+
+.search-input {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.125rem;
+  border: 2px solid var(--gray-300);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  transition: border-color 0.2s;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--red);
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.filter-select {
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 2px solid var(--gray-300);
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: var(--red);
+}
+
+.results-count {
+  text-align: center;
+  font-size: 1.125rem;
+  color: var(--gray-700);
+  margin-bottom: 1.5rem;
+}
+
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.result-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  color: var(--gray-900);
+}
+
+.result-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  text-decoration: none;
+}
+
+.result-card h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: var(--red);
+}
+
+.result-card .location {
+  color: var(--gray-700);
+  margin-bottom: 0.5rem;
+}
+
+.result-card .type {
+  font-size: 0.875rem;
+  color: var(--gray-600);
+  font-style: italic;
+}
+
+.no-results {
+  text-align: center;
+  font-size: 1.125rem;
+  color: var(--gray-700);
+  padding: 4rem 0;
+}
+
+.loading {
+  text-align: center;
+  font-size: 1.125rem;
+  padding: 4rem 0;
+}
+
+@media (max-width: 768px) {
+  .results-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filters {
+    grid-template-columns: 1fr;
+  }
+}
