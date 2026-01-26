@@ -23,13 +23,23 @@ function Home({ language }) {
   // Fetch featured places with images
   useEffect(() => {
     fetch(`${config.endpoints.places}?lang=${language}&limit=12`)
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`)
+        }
+        return res.json()
+      })
       .then(data => {
         // Filter places that have images
-        const placesWithImages = data.places.filter(place => place.primary_image)
-        setFeaturedPlaces(placesWithImages.slice(0, 8))
+        if (data && data.places && Array.isArray(data.places)) {
+          const placesWithImages = data.places.filter(place => place.primary_image)
+          setFeaturedPlaces(placesWithImages.slice(0, 8))
+        }
       })
-      .catch(err => console.error('Error loading featured places:', err))
+      .catch(err => {
+        console.error('Error loading featured places:', err)
+        setFeaturedPlaces([])
+      })
   }, [language])
 
   // Auto-play carousel

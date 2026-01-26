@@ -78,11 +78,8 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 			const limit = parseInt(url.searchParams.get('limit') || '100');
 			const offset = parseInt(url.searchParams.get('offset') || '0');
 
-			const nameField = lang === 'fr' ? 'name_fr' : 'name_en';
-
 			let query = `SELECT DISTINCT
 					p.id,
-					p.${nameField} as name_${lang},
 					p.name_en,
 					p.name_fr,
 					p.province_territory,
@@ -114,7 +111,12 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 				query += ` WHERE ` + conditions.join(' AND ');
 			}
 
-			query += ` ORDER BY p.${nameField} LIMIT ? OFFSET ?`;
+			// Order by the appropriate language field
+			if (lang === 'fr') {
+				query += ` ORDER BY COALESCE(p.name_fr, p.name_en) LIMIT ? OFFSET ?`;
+			} else {
+				query += ` ORDER BY p.name_en LIMIT ? OFFSET ?`;
+			}
 			params.push(limit, offset);
 
 			const { results } = await env.DB.prepare(query).bind(...params).all();
