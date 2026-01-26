@@ -40,7 +40,7 @@ function App() {
           <div className="container">
             <div className="header-content">
               <Link to="/" className="logo">
-                <img src="/maple-leaf.svg" alt="Canada" className="logo-icon" />
+                <img src="/maple-leaf-icon.webp" alt="Canada" className="logo-icon" />
                 <h1>{t.title}</h1>
               </Link>
               <nav className="nav">
