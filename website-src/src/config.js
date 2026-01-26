@@ -17,6 +17,7 @@ export const config = {
     search: `${API_BASE_URL}/api/search`,
     map: `${API_BASE_URL}/api/map`,
     provinces: `${API_BASE_URL}/api/provinces`,
+    filters: `${API_BASE_URL}/api/filters`,
     stats: `${API_BASE_URL}/api/stats`,
   }
 };

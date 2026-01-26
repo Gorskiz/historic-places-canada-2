@@ -35,7 +35,7 @@ function Search({ language }) {
   // Load filter options
   useEffect(() => {
     // We can use the new /api/filters endpoint
-    fetch(`${config.endpoints.api}/filters?lang=${language}`)
+    fetch(`${config.endpoints.filters}?lang=${language}`)
       .then(res => res.json())
       .then(data => {
         setOptions({
