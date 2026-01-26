@@ -142,7 +142,7 @@ function Search({ language }) {
           <div className="filters">
             <select
               value={filters.province}
-              onChange={(e) => setFilters({...filters, province: e.target.value})}
+              onChange={(e) => setFilters({ ...filters, province: e.target.value })}
               className="filter-select"
             >
               <option value="">{t.province} - {t.all}</option>
@@ -167,7 +167,7 @@ function Search({ language }) {
                 <p className="location">
                   {[place.municipality, place.province].filter(Boolean).join(', ')}
                 </p>
-                {place.type && <p className="type">{place.type}</p>}
+                {place.recognition_type && <p className="type">{place.recognition_type}</p>}
               </Link>
             ))}
           </div>

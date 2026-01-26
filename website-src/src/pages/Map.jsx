@@ -86,7 +86,7 @@ function Map({ language }) {
           {places.map(place => (
             <Marker
               key={place.id}
-              position={[place.coordinates.latitude, place.coordinates.longitude]}
+              position={[place.latitude, place.longitude]}
             >
               <Popup>
                 <div className="popup-content">

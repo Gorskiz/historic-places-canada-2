@@ -19,7 +19,7 @@ function PlaceDetail({ language }) {
         return res.json()
       })
       .then(data => {
-        setPlace(data.place)
+        setPlace({ ...data.place, images: data.images })
         setLoading(false)
       })
       .catch(err => {
@@ -80,9 +80,9 @@ function PlaceDetail({ language }) {
   }
 
   const sections = place.sections || {}
-  const description = sections['Description of Historic Place'] || sections['Description du lieu patrimonial'] || ''
-  const heritage = sections['Heritage Value'] || sections['Valeur patrimoniale'] || ''
-  const elements = sections['Character-Defining Elements'] || sections['Éléments caractéristiques'] || ''
+  const description = place.description || sections['Description of Historic Place'] || sections['Description du lieu patrimonial'] || ''
+  const heritage = place.heritage_value || sections['Heritage Value'] || sections['Valeur patrimoniale'] || ''
+  const elements = place.character_elements || sections['Character-Defining Elements'] || sections['Éléments caractéristiques'] || ''
 
   const images = (place.images || []).filter(img =>
     !img.url.includes('arrow') &&
@@ -96,7 +96,7 @@ function PlaceDetail({ language }) {
       <div className="container">
         <Link to="/search" className="back-link">{t.back}</Link>
 
-        <h1>{place.name || Object.keys(sections)[0] || 'Historic Place'}</h1>
+        <h1>{place.name}</h1>
 
         {images.length > 0 && (
           <div className="images-gallery">
@@ -111,12 +111,12 @@ function PlaceDetail({ language }) {
           </div>
         )}
 
-        {place.coordinates && (
+        {place.latitude && place.longitude && (
           <div className="map-section">
             <h2>{t.location}</h2>
             <div className="mini-map">
               <MapContainer
-                center={[place.coordinates.latitude, place.coordinates.longitude]}
+                center={[place.latitude, place.longitude]}
                 zoom={10}
                 style={{ height: '300px', width: '100%' }}
               >
@@ -124,11 +124,11 @@ function PlaceDetail({ language }) {
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                <Marker position={[place.coordinates.latitude, place.coordinates.longitude]} />
+                <Marker position={[place.latitude, place.longitude]} />
               </MapContainer>
             </div>
             <p className="coordinates">
-              {t.coordinates}: {place.coordinates.latitude.toFixed(6)}°, {place.coordinates.longitude.toFixed(6)}°
+              {t.coordinates}: {place.latitude.toFixed(6)}°, {place.longitude.toFixed(6)}°
             </p>
           </div>
         )}
@@ -154,23 +154,36 @@ function PlaceDetail({ language }) {
           </section>
         )}
 
-        {sections.Recognition && (
-          <section className="content-section">
-            <h2>{t.recognition}</h2>
-            <div className="metadata">
-              {Object.entries(sections).map(([key, value]) => {
-                if (['Jurisdiction', 'Recognition Authority', 'Recognition Statute', 'Recognition Type', 'Recognition Date'].includes(key)) {
-                  return (
-                    <div key={key} className="metadata-item">
-                      <strong>{key}:</strong> {value}
-                    </div>
-                  )
-                }
-                return null
-              })}
-            </div>
-          </section>
-        )}
+        <section className="content-section">
+          <h2>{t.recognition}</h2>
+          <div className="metadata">
+            {place.jurisdiction && (
+              <div className="metadata-item">
+                <strong>Jurisdiction:</strong> {place.jurisdiction}
+              </div>
+            )}
+            {place.recognition_authority && (
+              <div className="metadata-item">
+                <strong>Recognition Authority:</strong> {place.recognition_authority}
+              </div>
+            )}
+            {place.recognition_statute && (
+              <div className="metadata-item">
+                <strong>Recognition Statute:</strong> {place.recognition_statute}
+              </div>
+            )}
+            {place.recognition_type && (
+              <div className="metadata-item">
+                <strong>Recognition Type:</strong> {place.recognition_type}
+              </div>
+            )}
+            {place.recognition_date && (
+              <div className="metadata-item">
+                <strong>Recognition Date:</strong> {place.recognition_date}
+              </div>
+            )}
+          </div>
+        </section>
       </div>
     </div>
   )
