@@ -131,6 +131,7 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 			const q = url.searchParams.get('q') || '';
 			const lang = url.searchParams.get('lang') || 'en';
 			const limit = parseInt(url.searchParams.get('limit') || '50');
+			const offset = parseInt(url.searchParams.get('offset') || '0');
 
 			if (!q || q.length < 2) {
 				return jsonResponse({ error: 'Query too short' }, 400);
@@ -148,8 +149,8 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 						OR province LIKE ?
 						OR municipality LIKE ?
 					)
-					LIMIT ?
-				`).bind(lang, `%${q}%`, `%${q}%`, `%${q}%`, `%${q}%`, limit).all();
+					LIMIT ? OFFSET ?
+				`).bind(lang, `%${q}%`, `%${q}%`, `%${q}%`, `%${q}%`, limit, offset).all();
 
 			return jsonResponse({ results, count: results.length });
 		}

@@ -118,3 +118,10 @@
     grid-template-columns: 1fr;
   }
 }
+
+.loading-more {
+  text-align: center;
+  padding: 2rem;
+  color: var(--gray-600);
+  font-style: italic;
+}

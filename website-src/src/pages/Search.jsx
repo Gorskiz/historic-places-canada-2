@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { config } from '../config'
 import './Search.css'
@@ -12,6 +12,11 @@ function Search({ language }) {
   })
   const [loading, setLoading] = useState(false)
   const [provinces, setProvinces] = useState([])
+  const [offset, setOffset] = useState(0)
+  const [hasMore, setHasMore] = useState(true)
+
+  const observer = useRef()
+  const LIMIT = 50
 
   // Load provinces for filter
   useEffect(() => {
@@ -25,68 +30,83 @@ function Search({ language }) {
       })
   }, [language])
 
-  // Perform search when inputs change
-  useEffect(() => {
-    performSearch()
+  const performSearch = useCallback((currentOffset, isNewSearch) => {
+    // Determine which API endpoint to use
+    // If searchTerm is >= 2 chars, use /api/search
+    // Otherwise use /api/places (unless term is 1 char, then we might want to wait or show nothing?)
+
+    // Logic from original:
+    // 1. If no search term and no filters -> fetch all (now /api/places with limit)
+    // 2. If search term >= 2 -> /api/search
+    // 3. If filters active -> /api/places
+
+    let url = ''
+    const hasSearchTerm = searchTerm && searchTerm.length >= 2
+
+    if (hasSearchTerm) {
+      url = `${config.endpoints.search}?q=${encodeURIComponent(searchTerm)}&lang=${language}&limit=${LIMIT}&offset=${currentOffset}`
+      if (filters.province) url += `&province=${encodeURIComponent(filters.province)}`
+      if (filters.type) url += `&type=${encodeURIComponent(filters.type)}`
+    } else {
+      // If we have a 1-char search term and no filters, maybe we shouldn't search?
+      // Original code cleared results if else.
+      if (searchTerm && searchTerm.length < 2 && !filters.province && !filters.type) {
+        if (isNewSearch) setResults([])
+        return
+      }
+
+      url = `${config.endpoints.places}?lang=${language}&limit=${LIMIT}&offset=${currentOffset}`
+      if (filters.province) url += `&province=${encodeURIComponent(filters.province)}`
+      if (filters.type) url += `&type=${encodeURIComponent(filters.type)}`
+    }
+
+    setLoading(true)
+    fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        const newResults = data.results || data.places || []
+
+        setResults(prev => {
+          if (isNewSearch) return newResults
+          // Filter out duplicates just in case
+          const existingIds = new Set(prev.map(p => p.id))
+          const uniqueNewResults = newResults.filter(p => !existingIds.has(p.id))
+          return [...prev, ...uniqueNewResults]
+        })
+
+        setHasMore(newResults.length === LIMIT)
+        setLoading(false)
+      })
+      .catch(err => {
+        console.error('Error searching:', err)
+        setLoading(false)
+      })
   }, [searchTerm, filters, language])
 
-  const performSearch = () => {
-    // If no search term and no filters, fetch all places
-    if (!searchTerm && !filters.province && !filters.type) {
-      setLoading(true)
-      fetch(`${config.endpoints.places}?lang=${language}&limit=10000`)
-        .then(res => res.json())
-        .then(data => {
-          setResults(data.places || [])
-          setLoading(false)
-        })
-        .catch(err => {
-          console.error('Error loading places:', err)
-          setLoading(false)
-        })
-      return
-    }
+  // Trigger search on inputs change
+  useEffect(() => {
+    setOffset(0)
+    setHasMore(true)
+    performSearch(0, true)
+  }, [performSearch])
 
-    // Search with API
-    if (searchTerm && searchTerm.length >= 2) {
-      setLoading(true)
-      let url = `${config.endpoints.search}?q=${encodeURIComponent(searchTerm)}&lang=${language}`
+  // Infinite scroll observer
+  const lastElementRef = useCallback(node => {
+    if (loading) return
+    if (observer.current) observer.current.disconnect()
 
-      if (filters.province) url += `&province=${encodeURIComponent(filters.province)}`
-      if (filters.type) url += `&type=${encodeURIComponent(filters.type)}`
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore) {
+        setOffset(prevOffset => {
+          const newOffset = prevOffset + LIMIT
+          performSearch(newOffset, false)
+          return newOffset
+        })
+      }
+    })
 
-      fetch(url)
-        .then(res => res.json())
-        .then(data => {
-          setResults(data.results || [])
-          setLoading(false)
-        })
-        .catch(err => {
-          console.error('Error searching:', err)
-          setLoading(false)
-        })
-    } else if (filters.province || filters.type) {
-      // Filter only (no search term)
-      setLoading(true)
-      let url = `${config.endpoints.places}?lang=${language}&limit=10000`
-
-      if (filters.province) url += `&province=${encodeURIComponent(filters.province)}`
-      if (filters.type) url += `&type=${encodeURIComponent(filters.type)}`
-
-      fetch(url)
-        .then(res => res.json())
-        .then(data => {
-          setResults(data.places || [])
-          setLoading(false)
-        })
-        .catch(err => {
-          console.error('Error filtering:', err)
-          setLoading(false)
-        })
-    } else {
-      setResults([])
-    }
-  }
+    if (node) observer.current.observe(node)
+  }, [loading, hasMore, performSearch])
 
   const text = {
     en: {
@@ -114,16 +134,6 @@ function Search({ language }) {
   }
 
   const t = text[language]
-
-  if (loading) {
-    return (
-      <div className="search-page">
-        <div className="container">
-          <p className="loading">{t.loading}</p>
-        </div>
-      </div>
-    )
-  }
 
   return (
     <div className="search-page">
@@ -154,24 +164,42 @@ function Search({ language }) {
         </div>
 
         <div className="results-count">
-          {results.length} {t.results}
+          {/* Note: This count might be misleading now as it's the fetched count, not total. 
+               The API returns 'count' which is usually the page count or total? 
+               In index.ts:
+               jsonResponse({ results, count: results.length });
+               So it's just the length of current page. 
+               If we want total count, we'd need a separate query, but let's just show loaded count or nothing.
+               Let's show "Showing X results"
+           */}
+          Showing {results.length} {t.results}
         </div>
 
-        {results.length === 0 ? (
+        {results.length === 0 && !loading ? (
           <p className="no-results">{t.noResults}</p>
         ) : (
           <div className="results-grid">
-            {results.map(place => (
-              <Link to={`/place/${place.id}`} key={place.id} className="result-card">
-                <h3>{place.name}</h3>
-                <p className="location">
-                  {[place.municipality, place.province].filter(Boolean).join(', ')}
-                </p>
-                {place.recognition_type && <p className="type">{place.recognition_type}</p>}
-              </Link>
-            ))}
+            {results.map((place, index) => {
+              const isLastElement = index === results.length - 1
+              return (
+                <Link
+                  ref={isLastElement ? lastElementRef : null}
+                  to={`/place/${place.id}`}
+                  key={place.id}
+                  className="result-card"
+                >
+                  <h3>{place.name}</h3>
+                  <p className="location">
+                    {[place.municipality, place.province].filter(Boolean).join(', ')}
+                  </p>
+                  {place.recognition_type && <p className="type">{place.recognition_type}</p>}
+                </Link>
+              )
+            })}
           </div>
         )}
+
+        {loading && <p className="loading-more">{t.loading}</p>}
       </div>
     </div>
   )
