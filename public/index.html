@@ -1,32 +1,18 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Hello, World!</title>
-	</head>
-	<body>
-		<h1 id="heading"></h1>
-		<p>This page comes from a static asset stored at `public/index.html` as configured in `wrangler.jsonc`.</p>
-		<button id="button" type="button">Fetch a random UUID</button>
-		<output id="random" for="button"></output>
-		<script>
-			fetch('/message')
-				.then((resp) => resp.text())
-				.then((text) => {
-					const h1 = document.getElementById('heading');
-					h1.textContent = text;
-				});
-
-			const button = document.getElementById("button");
-			button.addEventListener("click", () => {
-				fetch('/random')
-					.then((resp) => resp.text())
-					.then((text) => {
-						const random = document.getElementById('random');
-						random.textContent = text;
-					});
-			});
-		</script>
-	</body>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="./maple-leaf.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Canadian Register of Historic Places - Preserving Canada's heritage for future generations" />
+    <title>Historic Places Canada | Lieux patrimoniaux du Canada</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script type="module" crossorigin src="./assets/index-CcvNOE7l.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/react-vendor-BJqAbh6S.js">
+    <link rel="modulepreload" crossorigin href="./assets/map-vendor-BTgFIwXr.js">
+    <link rel="stylesheet" crossorigin href="./assets/index-DgAIaH8w.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
 </html>

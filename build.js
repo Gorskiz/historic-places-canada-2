@@ -16,8 +16,21 @@ const PUBLIC_DIR = path.join(__dirname, 'public');
 
 console.log('🏗️  Building Historic Places Canada (Unified Worker)\n');
 
-// Step 1: Build React frontend
-console.log('1️⃣  Building React frontend...');
+// Step 1: Install website dependencies
+console.log('1️⃣  Installing website dependencies...');
+try {
+  execSync('npm install', {
+    cwd: WEBSITE_DIR,
+    stdio: 'inherit'
+  });
+  console.log('✅ Dependencies installed\n');
+} catch (error) {
+  console.error('❌ Dependency installation failed:', error.message);
+  process.exit(1);
+}
+
+// Step 2: Build React frontend
+console.log('2️⃣  Building React frontend...');
 try {
   execSync('npm run build', {
     cwd: WEBSITE_DIR,
