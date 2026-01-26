@@ -84,12 +84,14 @@ function PlaceDetail({ language }) {
   const heritage = place.heritage_value || sections['Heritage Value'] || sections['Valeur patrimoniale'] || ''
   const elements = place.character_elements || sections['Character-Defining Elements'] || sections['Éléments caractéristiques'] || ''
 
-  const images = (place.images || []).filter(img =>
-    !img.url.includes('arrow') &&
-    !img.url.includes('logo') &&
-    !img.url.includes('header') &&
-    !img.url.includes('icon')
-  )
+  const images = (place.images || []).filter(img => {
+    const url = img.r2_url || img.url
+    if (!url) return false
+    return !url.includes('arrow') &&
+      !url.includes('logo') &&
+      !url.includes('header') &&
+      !url.includes('icon')
+  })
 
   return (
     <div className="place-detail">
@@ -103,7 +105,7 @@ function PlaceDetail({ language }) {
             {images.slice(0, 3).map((img, idx) => (
               <img
                 key={idx}
-                src={img.local_file ? `./data/images/${img.local_file}` : img.url}
+                src={img.r2_url || img.url}
                 alt={img.alt || place.name}
                 className="place-image"
               />
