@@ -123,22 +123,29 @@ function Home({ language }) {
       }, interval)
     }
 
-    animateValue(0, stats.totalPlaces || 13000, 'total')
-    animateValue(0, stats.provinces || 13, 'provinces')
-    animateValue(0, parseInt(stats.themes) || 50, 'themes')
-    animateValue(0, stats.totalImages || 8500, 'images')
+    animateValue(0, stats.totalPlaces || 0, 'total')
+    animateValue(0, stats.provinces || 0, 'provinces')
+    animateValue(0, stats.themes || 0, 'themes')
+    animateValue(0, stats.totalImages || 0, 'images')
   }, [stats])
+
+  const getSubtitle = () => {
+    if (!stats) return language === 'en' ? 'Loading...' : 'Chargement...'
+    const count = stats.totalPlaces?.toLocaleString() || '0'
+    return language === 'en'
+      ? `Explore over ${count} historic places across Canada`
+      : `Explorez plus de ${count} lieux patrimoniaux à travers le Canada`
+  }
 
   const text = {
     en: {
       hero: 'Preserving Canadian Heritage',
-      subtitle: 'Explore over 13,000 historic places across Canada',
       cta: 'Start Exploring',
       viewPlace: 'View Details',
       featuredPlaces: 'Featured Historic Places',
       loading: 'Loading...',
       about: 'About This Project',
-      aboutText: 'In 2026, Parks Canada announced the closure of HistoricPlaces.ca without preserving its invaluable database of over 13,000 historic sites. This community-led project was created to rescue and preserve this irreplaceable cultural heritage data for future generations.',
+      aboutText: `In 2026, Parks Canada announced the closure of HistoricPlaces.ca without preserving its invaluable database of over ${stats?.totalPlaces?.toLocaleString() || '13,000'} historic sites. This community-led project was created to rescue and preserve this irreplaceable cultural heritage data for future generations.`,
       why: 'Why This Matters',
       whyText: 'Historic places tell the story of Canada - from Indigenous heritage sites to colonial architecture, from battlefields to cultural landmarks. Without this central database, this knowledge would be lost.',
       features: 'Features',
@@ -155,13 +162,12 @@ function Home({ language }) {
     },
     fr: {
       hero: 'Préserver le patrimoine canadien',
-      subtitle: 'Explorez plus de 13 000 lieux patrimoniaux à travers le Canada',
       cta: 'Commencer l\'exploration',
       viewPlace: 'Voir les détails',
       featuredPlaces: 'Lieux historiques en vedette',
       loading: 'Chargement...',
       about: 'À propos de ce projet',
-      aboutText: 'En 2026, Parcs Canada a annoncé la fermeture de LieuxPatrimoniaux.ca sans préserver sa précieuse base de données de plus de 13 000 sites historiques. Ce projet communautaire a été créé pour sauver et préserver ces données patrimoniales irremplaçables pour les générations futures.',
+      aboutText: `En 2026, Parcs Canada a annoncé la fermeture de LieuxPatrimoniaux.ca sans préserver sa précieuse base de données de plus de ${stats?.totalPlaces?.toLocaleString() || '13 000'} sites historiques. Ce projet communautaire a été créé pour sauver et préserver ces données patrimoniales irremplaçables pour les générations futures.`,
       why: 'Pourquoi c\'est important',
       whyText: 'Les lieux patrimoniaux racontent l\'histoire du Canada - des sites patrimoniaux autochtones à l\'architecture coloniale, des champs de bataille aux monuments culturels. Sans cette base de données centrale, ces connaissances seraient perdues.',
       features: 'Fonctionnalités',
@@ -279,7 +285,7 @@ function Home({ language }) {
               <h1 className="hero-title">
                 <span className="title-line">{t.hero}</span>
               </h1>
-              <p className="hero-subtitle">{t.subtitle}</p>
+              <p className="hero-subtitle">{getSubtitle()}</p>
             </div>
           </div>
         ) : (
@@ -288,7 +294,7 @@ function Home({ language }) {
               <h2 className="hero-title">
                 <span className="title-line">{t.hero}</span>
               </h2>
-              <p className="hero-subtitle">{t.subtitle}</p>
+              <p className="hero-subtitle">{getSubtitle()}</p>
               <div className="hero-loading">{t.loading}</div>
             </div>
           </div>

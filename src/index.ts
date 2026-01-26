@@ -323,10 +323,25 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 					SELECT COUNT(DISTINCT province) as count FROM places WHERE language = ?
 				`).bind(lang).first();
 
+			const totalImages = await env.DB.prepare(`
+					SELECT COUNT(*) as count FROM images
+				`).first();
+
+			const themes = await env.DB.prepare(`
+					SELECT COUNT(DISTINCT theme) as count
+					FROM (
+						SELECT TRIM(value) as theme
+						FROM places, json_each('["' || REPLACE(REPLACE(themes, ', ', '","'), ',', '","') || '"]')
+						WHERE language = ? AND themes IS NOT NULL AND themes != ''
+					)
+				`).bind(lang).first();
+
 			return jsonResponse({
 				totalPlaces: totalPlaces?.count || 0,
 				placesWithCoordinates: withCoords?.count || 0,
 				provinces: provinces?.count || 0,
+				totalImages: totalImages?.count || 0,
+				themes: themes?.count || 0,
 			});
 		}
 
