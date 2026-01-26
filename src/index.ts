@@ -141,11 +141,12 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 			const theme = url.searchParams.get('theme');
 			const minYear = parseInt(url.searchParams.get('min_year') || '0');
 			const maxYear = parseInt(url.searchParams.get('max_year') || '0');
+			const architect = url.searchParams.get('architect');
 
 			// Base query
 			let query = `SELECT
 						id, name, province, municipality, latitude, longitude,
-						description, recognition_type, jurisdiction, recognition_date
+						description, recognition_type, jurisdiction, recognition_date, architect
 					FROM places
 					WHERE language = ?`;
 
@@ -157,9 +158,10 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 					name LIKE ?
 					OR description LIKE ?
 					OR municipality LIKE ?
+					OR architect LIKE ?
 				)`;
 				const term = `%${q}%`;
-				params.push(term, term, term);
+				params.push(term, term, term, term);
 			}
 
 			// Apply Filters
@@ -188,6 +190,11 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 				params.push(`%${theme}%`);
 			}
 
+			if (architect) {
+				query += ` AND architect LIKE ?`;
+				params.push(`%${architect}%`);
+			}
+
 			if (minYear > 0) {
 				query += ` AND substr(recognition_date, 1, 4) >= ?`;
 				params.push(minYear.toString());
@@ -212,21 +219,33 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 			const lang = url.searchParams.get('lang') || 'en';
 
 			const provinces = await env.DB.prepare(`
-				SELECT DISTINCT province FROM places WHERE language = ? AND province IS NOT NULL ORDER BY province
+				SELECT province, COUNT(*) as count 
+				FROM places 
+				WHERE language = ? AND province IS NOT NULL 
+				GROUP BY province 
+				ORDER BY province
 			`).bind(lang).all();
 
 			const types = await env.DB.prepare(`
-				SELECT DISTINCT recognition_type FROM places WHERE language = ? AND recognition_type IS NOT NULL ORDER BY recognition_type
+				SELECT recognition_type, COUNT(*) as count 
+				FROM places 
+				WHERE language = ? AND recognition_type IS NOT NULL 
+				GROUP BY recognition_type 
+				ORDER BY recognition_type
 			`).bind(lang).all();
 
 			const jurisdictions = await env.DB.prepare(`
-				SELECT DISTINCT jurisdiction FROM places WHERE language = ? AND jurisdiction IS NOT NULL ORDER BY jurisdiction
+				SELECT jurisdiction, COUNT(*) as count 
+				FROM places 
+				WHERE language = ? AND jurisdiction IS NOT NULL 
+				GROUP BY jurisdiction 
+				ORDER BY jurisdiction
 			`).bind(lang).all();
 
 			return jsonResponse({
-				provinces: provinces.results.map((r: any) => r.province),
-				types: types.results.map((r: any) => r.recognition_type),
-				jurisdictions: jurisdictions.results.map((r: any) => r.jurisdiction)
+				provinces: provinces.results,
+				types: types.results,
+				jurisdictions: jurisdictions.results
 			});
 		}
 

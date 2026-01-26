@@ -18,6 +18,7 @@ function Search({ language }) {
     type: '',
     jurisdiction: '',
     theme: '',
+    architect: '',
     min_year: '',
     max_year: ''
   })
@@ -138,6 +139,7 @@ function Search({ language }) {
       type: '',
       jurisdiction: '',
       theme: '',
+      architect: '',
       min_year: '',
       max_year: ''
     })
@@ -148,11 +150,12 @@ function Search({ language }) {
     en: {
       title: 'Search Historic Places',
       searchPlaceholder: 'Search by name, description...',
-      province: 'Province/Territory',
+      province: 'Province / Jurisdiction',
       municipality: 'Municipality',
       type: 'Recognition Type',
       jurisdiction: 'Jurisdiction',
       theme: 'Theme / Keyword',
+      architect: 'Architect / Builder',
       yearRange: 'Year Range',
       minYear: 'Min Year',
       maxYear: 'Max Year',
@@ -221,13 +224,13 @@ function Search({ language }) {
                 >
                   <option value="">{t.all}</option>
                   {options.provinces.map(p => (
-                    <option key={p} value={p}>{p}</option>
+                    <option key={p.province} value={p.province}>{p.province} ({p.count})</option>
                   ))}
                 </select>
               </div>
 
-              {/* Jurisdiction */}
-              <div className="filter-group">
+              {/* Jurisdiction - Hidden as it duplicates Province currently */
+              /* <div className="filter-group">
                 <label>{t.jurisdiction}</label>
                 <select
                   value={filters.jurisdiction}
@@ -236,10 +239,10 @@ function Search({ language }) {
                 >
                   <option value="">{t.all}</option>
                   {options.jurisdictions.map(j => (
-                    <option key={j} value={j}>{j}</option>
+                    <option key={j.jurisdiction} value={j.jurisdiction}>{j.jurisdiction} ({j.count})</option>
                   ))}
                 </select>
-              </div>
+              </div> */}
 
               {/* Type */}
               <div className="filter-group">
@@ -250,8 +253,8 @@ function Search({ language }) {
                   className="filter-select"
                 >
                   <option value="">{t.all}</option>
-                  {options.types.map(type => (
-                    <option key={type} value={type}>{type}</option>
+                  {options.types.map(t => (
+                    <option key={t.recognition_type} value={t.recognition_type}>{t.recognition_type} ({t.count})</option>
                   ))}
                 </select>
               </div>
@@ -277,6 +280,18 @@ function Search({ language }) {
                   onChange={(e) => handleFilterChange('theme', e.target.value)}
                   className="filter-input"
                   placeholder={t.theme}
+                />
+              </div>
+
+              {/* Architect */}
+              <div className="filter-group">
+                <label>{t.architect}</label>
+                <input
+                  type="text"
+                  value={filters.architect}
+                  onChange={(e) => handleFilterChange('architect', e.target.value)}
+                  className="filter-input"
+                  placeholder={t.architect}
                 />
               </div>
 
