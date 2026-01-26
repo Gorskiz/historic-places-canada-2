@@ -23,7 +23,7 @@ function Home({ language }) {
   // Fetch featured places with images
   useEffect(() => {
     console.log('🔍 Fetching featured places...')
-    fetch(`${config.endpoints.places}?lang=${language}&limit=12`)
+    fetch(`${config.endpoints.places}?lang=${language}&limit=12&random=true`)
       .then(res => {
         console.log('📡 API response status:', res.status)
         if (!res.ok) {

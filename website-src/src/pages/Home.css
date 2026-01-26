@@ -92,8 +92,8 @@
   padding: 0;
   overflow: hidden;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+  height: auto;
+  display: block;
   margin-top: 0;
 }
 
@@ -283,7 +283,6 @@
   height: 80vh;
   min-height: 600px;
   max-height: 900px;
-  flex-shrink: 0;
   z-index: 1;
 }
 

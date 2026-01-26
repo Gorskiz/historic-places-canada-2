@@ -75,6 +75,7 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 			const lang = url.searchParams.get('lang') || 'en';
 			const province = url.searchParams.get('province');
 			const type = url.searchParams.get('type');
+			const random = url.searchParams.get('random') === 'true';
 			const limit = parseInt(url.searchParams.get('limit') || '100');
 			const offset = parseInt(url.searchParams.get('offset') || '0');
 
@@ -107,7 +108,13 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 			conditions.push(`(SELECT COUNT(*) FROM images WHERE place_id = p.id) > 0`);
 
 			query += ` WHERE ` + conditions.join(' AND ');
-			query += ` ORDER BY p.name LIMIT ? OFFSET ?`;
+
+			// Use random order if requested, otherwise sort by name
+			if (random) {
+				query += ` ORDER BY RANDOM() LIMIT ? OFFSET ?`;
+			} else {
+				query += ` ORDER BY p.name LIMIT ? OFFSET ?`;
+			}
 			params.push(limit, offset);
 
 			const { results } = await env.DB.prepare(query).bind(...params).all();
