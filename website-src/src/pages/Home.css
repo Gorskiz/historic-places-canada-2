@@ -94,6 +94,7 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  margin-top: 0;
 }
 
 .hero-background {
@@ -283,12 +284,14 @@
   min-height: 600px;
   max-height: 900px;
   flex: 1;
+  z-index: 1;
 }
 
 .carousel-slides {
   position: relative;
   width: 100%;
   height: 100%;
+  overflow: hidden;
 }
 
 .carousel-slide {
@@ -300,12 +303,14 @@
   opacity: 0;
   transition: opacity 1s ease-in-out, transform 1s ease-in-out;
   pointer-events: none;
+  z-index: 1;
 }
 
 .carousel-slide.active {
-  opacity: 1;
+  opacity: 1 !important;
   pointer-events: all;
   z-index: 2;
+  transform: none !important;
 }
 
 .carousel-slide.prev {
@@ -319,10 +324,13 @@
 }
 
 .carousel-image-wrapper {
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   overflow: hidden;
+  z-index: 0;
 }
 
 .carousel-image {
@@ -330,11 +338,13 @@
   height: 100%;
   object-fit: cover;
   object-position: center;
+  display: block;
   animation: zoomIn 1.2s ease-out;
 }
 
 .carousel-slide.active .carousel-image {
   animation: zoomIn 1.2s ease-out, kenBurns 20s ease-out 1.2s forwards;
+  opacity: 1;
 }
 
 .carousel-overlay {
@@ -349,6 +359,7 @@
     rgba(26, 0, 8, 0.5) 50%,
     rgba(26, 0, 8, 0.9) 100%
   );
+  z-index: 1;
 }
 
 .carousel-content {
@@ -357,7 +368,7 @@
   left: 0;
   right: 0;
   padding: 3rem 2rem;
-  z-index: 3;
+  z-index: 10;
   max-width: 1400px;
   margin: 0 auto;
   animation: slideUp 0.8s ease-out 0.3s both;

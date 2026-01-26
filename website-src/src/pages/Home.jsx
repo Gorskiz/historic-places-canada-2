@@ -22,22 +22,30 @@ function Home({ language }) {
 
   // Fetch featured places with images
   useEffect(() => {
+    console.log('🔍 Fetching featured places...')
     fetch(`${config.endpoints.places}?lang=${language}&limit=12`)
       .then(res => {
+        console.log('📡 API response status:', res.status)
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`)
         }
         return res.json()
       })
       .then(data => {
+        console.log('📦 Received data:', data)
+        console.log('📦 Places count:', data?.places?.length)
         // Filter places that have images
         if (data && data.places && Array.isArray(data.places)) {
           const placesWithImages = data.places.filter(place => place.primary_image)
+          console.log('🖼️ Places with images:', placesWithImages.length)
+          console.log('🖼️ First place:', placesWithImages[0])
           setFeaturedPlaces(placesWithImages.slice(0, 8))
+        } else {
+          console.warn('⚠️ Invalid data structure:', data)
         }
       })
       .catch(err => {
-        console.error('Error loading featured places:', err)
+        console.error('❌ Error loading featured places:', err)
         setFeaturedPlaces([])
       })
   }, [language])
@@ -168,6 +176,8 @@ function Home({ language }) {
   }
 
   const t = text[language]
+
+  console.log('🎨 Rendering Home component, featuredPlaces.length:', featuredPlaces.length)
 
   return (
     <div className="home">
