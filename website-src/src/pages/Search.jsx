@@ -1,26 +1,41 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { config } from '../config'
 import './Search.css'
 
 function Search({ language }) {
-  const [searchTerm, setSearchTerm] = useState('')
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  // Initialize state from URL params
+  const [searchTerm, setSearchTerm] = useState(searchParams.get('q') || '')
   const [results, setResults] = useState([])
   const [loading, setLoading] = useState(false)
   const [offset, setOffset] = useState(0)
   const [hasMore, setHasMore] = useState(true)
-  const [showAdvanced, setShowAdvanced] = useState(false)
+
+  // Check if any advanced filters are active to default open the panel
+  const hasAdvancedFilters =
+    searchParams.get('province') ||
+    searchParams.get('municipality') ||
+    searchParams.get('type') ||
+    searchParams.get('jurisdiction') ||
+    searchParams.get('theme') ||
+    searchParams.get('architect') ||
+    searchParams.get('min_year') ||
+    searchParams.get('max_year');
+
+  const [showAdvanced, setShowAdvanced] = useState(!!hasAdvancedFilters)
 
   // Filters State
   const [filters, setFilters] = useState({
-    province: '',
-    municipality: '',
-    type: '',
-    jurisdiction: '',
-    theme: '',
-    architect: '',
-    min_year: '',
-    max_year: ''
+    province: searchParams.get('province') || '',
+    municipality: searchParams.get('municipality') || '',
+    type: searchParams.get('type') || '',
+    jurisdiction: searchParams.get('jurisdiction') || '',
+    theme: searchParams.get('theme') || '',
+    architect: searchParams.get('architect') || '',
+    min_year: searchParams.get('min_year') || '',
+    max_year: searchParams.get('max_year') || ''
   })
 
   // Options State
@@ -128,8 +143,24 @@ function Search({ language }) {
     if (node) observer.current.observe(node)
   }, [loading, hasMore, performSearch])
 
+  // Sync URL with state
+  useEffect(() => {
+    const params = new URLSearchParams()
+
+    if (searchTerm) params.set('q', searchTerm)
+
+    Object.keys(filters).forEach(key => {
+      if (filters[key]) {
+        params.set(key, filters[key])
+      }
+    })
+
+    setSearchParams(params, { replace: true })
+  }, [searchTerm, filters, setSearchParams])
+
   const handleFilterChange = (key, value) => {
     setFilters(prev => ({ ...prev, [key]: value }))
+    setOffset(0) // Reset to first page on filter change
   }
 
   const clearFilters = () => {
@@ -144,6 +175,7 @@ function Search({ language }) {
       max_year: ''
     })
     setSearchTerm('')
+    setOffset(0)
   }
 
   const text = {
