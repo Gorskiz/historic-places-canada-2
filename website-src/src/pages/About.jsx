@@ -20,11 +20,11 @@ function About({ language }) {
       title: 'About This Project',
       subtitle: '🌟 This is an open source community project',
       crisis: 'The Crisis',
-      crisisText: `In early 2026, Parks Canada announced the closure of HistoricPlaces.ca, citing the "end of technological life" for their 15-year-old database system. While the system may be outdated, the data it contains is irreplaceable - over ${stats?.totalPlaces?.toLocaleString() || '13,000'} historic places across Canada, representing our collective cultural heritage.`,
+      crisisText: `In early 2026, Parks Canada announced the closure of HistoricPlaces.ca, citing the "end of technological life" for their 15-year-old database system. While the system may be outdated, the data it contains is irreplaceable - over ${stats?.totalPlaces?.toLocaleString() || '11,000'} historic places across Canada, representing our collective cultural heritage.`,
       problem: 'The Problem',
       problemText: 'Without this central database, there is no comprehensive, publicly accessible registry of Canadian historic places. Individual provinces maintain some records, but nothing approaches the scope and detail of the Canadian Register of Historic Places. The loss of this data would be a cultural tragedy.',
       solution: 'Our Solution',
-      solutionText: `This community-led open source project was created to preserve the entire database before it disappears. We scraped all ${stats?.totalPlaces?.toLocaleString() || '13,000+'} entries, both in English and French, including:`,
+      solutionText: `This community-led open source project was created to preserve the entire database before it disappears. We scraped all ${stats?.totalPlaces?.toLocaleString() || '11,000+'} entries, both in English and French, including:`,
       dataPoints: [
         'Complete descriptions and heritage values',
         'Character-defining elements',
@@ -65,11 +65,11 @@ function About({ language }) {
       title: 'À propos de ce projet',
       subtitle: '🌟 Ceci est un projet communautaire open source',
       crisis: 'La crise',
-      crisisText: `Au début de 2026, Parcs Canada a annoncé la fermeture de LieuxPatrimoniaux.ca, citant la "fin de vie technologique" de leur système de base de données vieux de 15 ans. Bien que le système puisse être obsolète, les données qu'il contient sont irremplaçables - plus de ${stats?.totalPlaces?.toLocaleString() || '13 000'} lieux historiques à travers le Canada, représentant notre patrimoine culturel collectif.`,
+      crisisText: `Au début de 2026, Parcs Canada a annoncé la fermeture de LieuxPatrimoniaux.ca, citant la "fin de vie technologique" de leur système de base de données vieux de 15 ans. Bien que le système puisse être obsolète, les données qu'il contient sont irremplaçables - plus de ${stats?.totalPlaces?.toLocaleString() || '11 000'} lieux historiques à travers le Canada, représentant notre patrimoine culturel collectif.`,
       problem: 'Le problème',
       problemText: 'Sans cette base de données centrale, il n\'existe aucun registre complet et accessible au public des lieux patrimoniaux canadiens. Les provinces individuelles maintiennent certains dossiers, mais rien n\'approche la portée et les détails du Registre canadien des lieux patrimoniaux. La perte de ces données serait une tragédie culturelle.',
       solution: 'Notre solution',
-      solutionText: `Ce projet communautaire open source a été créé pour préserver l'ensemble de la base de données avant qu'elle ne disparaisse. Nous avons extrait plus de ${stats?.totalPlaces?.toLocaleString() || '13 000'} entrées, en anglais et en français, incluant:`,
+      solutionText: `Ce projet communautaire open source a été créé pour préserver l'ensemble de la base de données avant qu'elle ne disparaisse. Nous avons extrait plus de ${stats?.totalPlaces?.toLocaleString() || '11 000'} entrées, en anglais et en français, incluant:`,
       dataPoints: [
         'Descriptions complètes et valeurs patrimoniales',
         'Éléments caractéristiques',
@@ -115,8 +115,8 @@ function About({ language }) {
       <SEO
         title={language === 'en' ? 'About - Historic Places Canada' : 'À propos - Lieux patrimoniaux du Canada'}
         description={language === 'en'
-          ? 'Learn about our community-led open source project to preserve over 13,000 historic places across Canada.'
-          : 'Découvrez notre projet communautaire open source visant à préserver plus de 13 000 lieux patrimoniaux à travers le Canada.'
+          ? 'Learn about our community-led open source project to preserve over 11,000 historic places across Canada.'
+          : 'Découvrez notre projet communautaire open source visant à préserver plus de 11 000 lieux patrimoniaux à travers le Canada.'
         }
       />
       <div className="container">

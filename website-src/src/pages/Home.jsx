@@ -152,7 +152,7 @@ function Home({ language }) {
       featuredPlaces: 'Featured Historic Places',
       loading: 'Loading...',
       about: 'About This Project',
-      aboutText: `In 2026, Parks Canada announced that HistoricPlaces.ca was set to be shut down without preserving its invaluable database of over ${stats?.totalPlaces?.toLocaleString() || '13,000'} historic sites. This community-led open source project was created to rescue and preserve this irreplaceable cultural heritage data for future generations.`,
+      aboutText: `In 2026, Parks Canada announced that HistoricPlaces.ca was set to be shut down without preserving its invaluable database of over ${stats?.totalPlaces?.toLocaleString() || '11,000'} historic sites. This community-led open source project was created to rescue and preserve this irreplaceable cultural heritage data for future generations.`,
       openSourceBadge: 'Open Source Project',
       why: 'Why This Matters',
       whyText: 'Historic places tell the story of Canada - from Indigenous heritage sites to colonial architecture, from battlefields to cultural landmarks. Without this central database, this knowledge would be lost.',
@@ -171,7 +171,7 @@ function Home({ language }) {
       viewAllCollections: 'View All Collections',
       missionBadge: 'Community Led',
       missionTitle: 'Preserving Our Digital Heritage',
-      missionText: `In 2026, the official HistoricPlaces.ca data was set to be shut down. This open-source initiative was created to rescue over ${stats?.totalPlaces?.toLocaleString() || '13,000'} invaluable records, ensuring Canada's architectural and cultural history remains accessible to everyone.`,
+      missionText: `In 2026, the official HistoricPlaces.ca data was set to be shut down. This open-source initiative was created to rescue over ${stats?.totalPlaces?.toLocaleString() || '11,000'} invaluable records, ensuring Canada's architectural and cultural history remains accessible to everyone.`,
       openSourceTitle: 'Open Source',
       openSourceDesc: 'Built by the community, for the community.',
       dataTitle: 'Open Data',
@@ -188,7 +188,7 @@ function Home({ language }) {
       featuredPlaces: 'Lieux historiques en vedette',
       loading: 'Chargement...',
       about: 'À propos de ce projet',
-      aboutText: `En 2026, Parcs Canada a annoncé que LieuxPatrimoniaux.ca devait être fermé sans préserver sa précieuse base de données de plus de ${stats?.totalPlaces?.toLocaleString() || '13 000'} sites historiques. Ce projet communautaire open source a été créé pour sauver et préserver ces données patrimoniales irremplaçables pour les générations futures.`,
+      aboutText: `En 2026, Parcs Canada a annoncé que LieuxPatrimoniaux.ca devait être fermé sans préserver sa précieuse base de données de plus de ${stats?.totalPlaces?.toLocaleString() || '11 000'} sites historiques. Ce projet communautaire open source a été créé pour sauver et préserver ces données patrimoniales irremplaçables pour les générations futures.`,
       openSourceBadge: 'Projet open source',
       why: 'Pourquoi c\'est important',
       whyText: 'Les lieux patrimoniaux racontent l\'histoire du Canada - des sites patrimoniaux autochtones à l\'architecture coloniale, des champs de bataille aux monuments culturels. Sans cette base de données centrale, ces connaissances seraient perdues.',
@@ -207,7 +207,7 @@ function Home({ language }) {
       viewAllCollections: 'Voir toutes les collections',
       missionBadge: 'Projet communautaire',
       missionTitle: 'Préserver notre patrimoine numérique',
-      missionText: `En 2026, la base de données officielle LieuxPatrimoniaux.ca devait être fermée. Cette initiative open-source a été créée pour sauver plus de ${stats?.totalPlaces?.toLocaleString() || '13 000'} dossiers précieux, garantissant que l'histoire architecturale et culturelle du Canada reste accessible à tous.`,
+      missionText: `En 2026, la base de données officielle LieuxPatrimoniaux.ca devait être fermée. Cette initiative open-source a été créée pour sauver plus de ${stats?.totalPlaces?.toLocaleString() || '11 000'} dossiers précieux, garantissant que l'histoire architecturale et culturelle du Canada reste accessible à tous.`,
       openSourceTitle: 'Open Source',
       openSourceDesc: 'Construit par la communauté, pour la communauté.',
       dataTitle: 'Données ouvertes',
@@ -228,8 +228,8 @@ function Home({ language }) {
       <SEO
         title={language === 'en' ? 'Canadian Historic Places - Preserving Heritage' : 'Lieux patrimoniaux canadiens - Préserver le patrimoine'}
         description={language === 'en'
-          ? `Explore over ${stats?.totalPlaces?.toLocaleString() || '13,000'} historic places across Canada. An open-source community project preserving Canadian architectural and cultural heritage.`
-          : `Explorez plus de ${stats?.totalPlaces?.toLocaleString() || '13 000'} lieux patrimoniaux à travers le Canada. Un projet communautaire open source préservant le patrimoine architectural et culturel canadien.`
+          ? `Explore over ${stats?.totalPlaces?.toLocaleString() || '11,000'} historic places across Canada. An open-source community project preserving Canadian architectural and cultural heritage.`
+          : `Explorez plus de ${stats?.totalPlaces?.toLocaleString() || '11 000'} lieux patrimoniaux à travers le Canada. Un projet communautaire open source préservant le patrimoine architectural et culturel canadien.`
         }
       />
 
@@ -240,8 +240,8 @@ function Home({ language }) {
           "@type": "WebSite",
           "name": language === 'en' ? "Historic Places Canada" : "Lieux patrimoniaux du Canada",
           "description": language === 'en'
-            ? "Explore over 13,000 historic places across Canada"
-            : "Explorez plus de 13 000 lieux patrimoniaux à travers le Canada",
+            ? "Explore over 11,000 historic places across Canada"
+            : "Explorez plus de 11 000 lieux patrimoniaux à travers le Canada",
           "url": window.location.origin,
           "potentialAction": {
             "@type": "SearchAction",
