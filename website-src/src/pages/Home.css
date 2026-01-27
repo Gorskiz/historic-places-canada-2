@@ -1037,6 +1037,11 @@
 }
 
 @media (max-width: 768px) {
+  .themes-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
   .section h3 {
     font-size: 2.5rem;
   }
@@ -1080,7 +1085,7 @@
   right: 0;
   bottom: 0;
   background: radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-              radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 40%);
+    radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 40%);
   pointer-events: none;
 }
 
@@ -1228,8 +1233,8 @@
 
 @media (max-width: 480px) {
   .carousel-container {
-    height: 60vh;
-    min-height: 450px;
+    height: 65vh;
+    min-height: 600px;
   }
 
   .carousel-content {
@@ -1307,12 +1312,26 @@
   }
 
   .stats {
-    grid-template-columns: 1fr;
-    gap: 0.875rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
   }
 
   .stat {
-    padding: 1.25rem 1rem;
+    padding: 1.25rem 0.75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .stat-icon {
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-icon svg {
+    width: 24px;
+    height: 24px;
   }
 
   .section-number {
@@ -1321,15 +1340,34 @@
   }
 
   .stat-value {
-    font-size: 2.25rem;
+    font-size: 1.75rem;
+    margin-bottom: 0.25rem;
   }
 
   .stat-label {
     font-size: 0.75rem;
   }
 
+
+
   .feature-card {
     padding: 2rem;
+  }
+
+  .theme-card {
+    padding: 1.5rem;
+    align-items: center;
+    /* Ensure centered alignment on mobile */
+  }
+
+  .theme-icon-wrapper {
+    width: 56px;
+    height: 56px;
+    margin-bottom: 1rem;
+  }
+
+  .theme-card h4 {
+    font-size: 1.125rem;
   }
 }
 

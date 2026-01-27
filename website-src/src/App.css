@@ -162,6 +162,7 @@
 .footer-link {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   font-weight: 600;
   padding: 0.5rem 1rem;
   border-radius: 8px;
@@ -233,5 +234,19 @@
   .lang-toggle {
     padding: 0.5rem 1rem;
     font-size: 0.8125rem;
+  }
+
+  .footer-links {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .footer-links>span {
+    display: none;
+  }
+
+  .footer-link {
+    width: 100%;
+    max-width: 280px;
   }
 }
