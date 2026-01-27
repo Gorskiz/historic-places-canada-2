@@ -8,6 +8,7 @@ interface Env {
 	DB: D1Database;
 	IMAGES: R2Bucket;
 	ASSETS: Fetcher; // Assets binding for static files
+	RATE_LIMITER: RateLimit; // Rate limiting binding
 }
 
 // CORS headers for API routes
@@ -68,7 +69,99 @@ export default {
 	},
 } satisfies ExportedHandler<Env>;
 
+/**
+ * Rate Limiting Configuration
+ */
+const RATE_LIMIT_CONFIG = {
+	REQUESTS_PER_MINUTE: 100,
+	WINDOW_SECONDS: 60,
+	HEADERS: {
+		LIMIT: 'X-RateLimit-Limit',
+		REMAINING: 'X-RateLimit-Remaining',
+		RESET: 'X-RateLimit-Reset',
+		RETRY_AFTER: 'Retry-After'
+	}
+};
+
+/**
+ * Check rate limits for incoming requests
+ * Returns either null (allowed) or a 429 Response (rate limited)
+ */
+async function checkRateLimit(
+	request: Request,
+	env: Env
+): Promise<Response | null> {
+	// Get identifier (IP address for anonymous users)
+	const identifier = request.headers.get('CF-Connecting-IP') || 'unknown';
+
+	// Create a unique key for this IP
+	const rateLimitKey = `ip:${identifier}`;
+
+	try {
+		// Check and increment rate limit
+		const { success } = await env.RATE_LIMITER.limit({ key: rateLimitKey });
+
+		if (!success) {
+			// Rate limit exceeded - calculate reset time
+			const now = Math.floor(Date.now() / 1000);
+			const resetTime = now + RATE_LIMIT_CONFIG.WINDOW_SECONDS;
+			const retryAfter = RATE_LIMIT_CONFIG.WINDOW_SECONDS;
+
+			return new Response(
+				JSON.stringify({
+					error: 'Rate limit exceeded',
+					message: 'Too many requests. Please try again later.',
+					retryAfter: retryAfter
+				}),
+				{
+					status: 429,
+					headers: {
+						'Content-Type': 'application/json',
+						[RATE_LIMIT_CONFIG.HEADERS.LIMIT]: RATE_LIMIT_CONFIG.REQUESTS_PER_MINUTE.toString(),
+						[RATE_LIMIT_CONFIG.HEADERS.REMAINING]: '0',
+						[RATE_LIMIT_CONFIG.HEADERS.RESET]: resetTime.toString(),
+						[RATE_LIMIT_CONFIG.HEADERS.RETRY_AFTER]: retryAfter.toString(),
+						...corsHeaders
+					}
+				}
+			);
+		}
+
+		// Success - request is allowed
+		return null;
+	} catch (error) {
+		// On error, allow request (fail open)
+		console.error('Rate limit check failed:', error);
+		return null;
+	}
+}
+
+/**
+ * Add rate limit headers to successful responses
+ */
+function addRateLimitHeaders(response: Response, remaining: number = 95): Response {
+	const now = Math.floor(Date.now() / 1000);
+	const resetTime = now + RATE_LIMIT_CONFIG.WINDOW_SECONDS;
+
+	const headers = new Headers(response.headers);
+	headers.set(RATE_LIMIT_CONFIG.HEADERS.LIMIT, RATE_LIMIT_CONFIG.REQUESTS_PER_MINUTE.toString());
+	headers.set(RATE_LIMIT_CONFIG.HEADERS.REMAINING, Math.max(0, remaining).toString());
+	headers.set(RATE_LIMIT_CONFIG.HEADERS.RESET, resetTime.toString());
+
+	return new Response(response.body, {
+		status: response.status,
+		statusText: response.statusText,
+		headers
+	});
+}
+
 async function handleApiRequest(request: Request, env: Env, url: URL, path: string): Promise<Response> {
+	// Check rate limit FIRST (before any processing)
+	const rateLimitResponse = await checkRateLimit(request, env);
+	if (rateLimitResponse) {
+		return rateLimitResponse; // Return 429 response
+	}
+
 	try {
 		// GET /api/places - List places with optional filters
 		if (path === '/api/places' && request.method === 'GET') {
@@ -118,7 +211,7 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 			params.push(limit, offset);
 
 			const { results } = await env.DB.prepare(query).bind(...params).all();
-			return jsonResponse({ places: results, count: results.length });
+			return addRateLimitHeaders(jsonResponse({ places: results, count: results.length }));
 		}
 
 		// GET /api/places/:id - Get specific place
@@ -131,7 +224,7 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 				`).bind(id, lang).first();
 
 			if (!place) {
-				return jsonResponse({ error: 'Place not found' }, 404);
+				return addRateLimitHeaders(jsonResponse({ error: 'Place not found' }, 404));
 			}
 
 			// Get images for this place
@@ -141,7 +234,7 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 					ORDER BY display_order
 				`).bind(id).all();
 
-			return jsonResponse({ place, images });
+			return addRateLimitHeaders(jsonResponse({ place, images }));
 		}
 
 		// GET /api/search - Unified search with filters
@@ -255,7 +348,7 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 			const dataParams = [...params, limit, offset];
 			const { results } = await env.DB.prepare(query).bind(...dataParams).all();
 
-			return jsonResponse({ results, count: results.length, total });
+			return addRateLimitHeaders(jsonResponse({ results, count: results.length, total }));
 		}
 
 		// GET /api/filters - Get options for filters
@@ -294,12 +387,12 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 				ORDER BY count DESC
 			`).bind(lang).all();
 
-			return jsonResponse({
+			return addRateLimitHeaders(jsonResponse({
 				provinces: provinces.results,
 				types: types.results,
 				jurisdictions: jurisdictions.results,
 				themes: themes.results
-			});
+			}));
 		}
 
 		// GET /api/map - Get places with coordinates (for map view)
@@ -323,7 +416,7 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 			query += ` LIMIT 100000`;
 
 			const { results } = await env.DB.prepare(query).bind(...params).all();
-			return jsonResponse({ places: results, count: results.length });
+			return addRateLimitHeaders(jsonResponse({ places: results, count: results.length }));
 		}
 
 		// GET /api/provinces - Get list of provinces
@@ -338,7 +431,7 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 					ORDER BY province
 				`).bind(lang).all();
 
-			return jsonResponse({ provinces: results });
+			return addRateLimitHeaders(jsonResponse({ provinces: results }));
 		}
 
 		// GET /api/stats - Get statistics
@@ -371,17 +464,17 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 					)
 				`).bind(lang).first();
 
-			return jsonResponse({
+			return addRateLimitHeaders(jsonResponse({
 				totalPlaces: totalPlaces?.count || 0,
 				placesWithCoordinates: withCoords?.count || 0,
 				provinces: provinces?.count || 0,
 				totalImages: totalImages?.count || 0,
 				themes: themes?.count || 0,
-			});
+			}));
 		}
 
 		// Default response
-		return jsonResponse({
+		return addRateLimitHeaders(jsonResponse({
 			message: 'Canadian Historic Places API',
 			version: '1.0.0',
 			endpoints: [
@@ -392,13 +485,13 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 				'GET /api/provinces?lang=en',
 				'GET /api/stats?lang=en',
 			],
-		});
+		}));
 
 	} catch (error) {
 		console.error('API Error:', error);
-		return jsonResponse({
+		return addRateLimitHeaders(jsonResponse({
 			error: 'Internal server error',
 			message: error instanceof Error ? error.message : 'Unknown error'
-		}, 500);
+		}, 500));
 	}
 }

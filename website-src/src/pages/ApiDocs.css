@@ -1,0 +1,561 @@
+.api-docs-page {
+  min-height: 100vh;
+  background: white;
+}
+
+/* Header */
+.api-docs-header {
+  background: linear-gradient(135deg, var(--red) 0%, #a01828 100%);
+  color: white;
+  padding: 3rem 0 0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.api-docs-header h1 {
+  font-size: 2.75rem;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  font-weight: 700;
+}
+
+.api-docs-header .subtitle {
+  text-align: center;
+  font-size: 1.2rem;
+  opacity: 0.95;
+  margin-bottom: 2rem;
+  font-weight: 400;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 0 1rem;
+}
+
+.tabs button {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 12px 12px 0 0;
+  transition: all 0.3s ease;
+  border-bottom: 3px solid transparent;
+}
+
+.tabs button:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.tabs button.active {
+  background: white;
+  color: var(--red);
+  border-bottom: 3px solid var(--red);
+}
+
+/* Content */
+.api-docs-content {
+  padding: 3rem 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.doc-section {
+  margin-bottom: 3rem;
+}
+
+.doc-section h2 {
+  font-size: 2rem;
+  color: var(--red);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--red);
+}
+
+.doc-section h3 {
+  font-size: 1.5rem;
+  color: var(--gray-900);
+  margin: 2rem 0 1rem;
+}
+
+.doc-section p {
+  line-height: 1.8;
+  color: var(--gray-800);
+  margin-bottom: 1rem;
+  font-size: 1.0625rem;
+}
+
+.doc-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+
+.doc-section ul li {
+  padding-left: 1.5rem;
+  margin-bottom: 0.75rem;
+  position: relative;
+  line-height: 1.6;
+  color: var(--gray-800);
+}
+
+.doc-section ul li::before {
+  content: "•";
+  color: var(--red);
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+}
+
+.doc-section blockquote {
+  margin: 1.5rem 0;
+  padding: 1rem 1.5rem;
+  background: var(--gray-100);
+  border-left: 4px solid var(--red);
+  font-style: italic;
+  color: var(--gray-800);
+}
+
+/* Info Card */
+.info-card {
+  background: linear-gradient(135deg, rgba(220, 20, 60, 0.05) 0%, rgba(220, 20, 60, 0.02) 100%);
+  border: 1px solid rgba(220, 20, 60, 0.2);
+  border-left: 4px solid var(--red);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+}
+
+.info-card ul {
+  margin: 0;
+}
+
+.info-card code {
+  background: white;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  color: var(--red);
+  font-family: 'Courier New', monospace;
+}
+
+/* Code Blocks */
+.code-examples {
+  display: grid;
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.code-block {
+  background: #f8f9fa;
+  border: 1px solid var(--gray-300);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.code-label {
+  background: var(--gray-800);
+  color: white;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+}
+
+.code-block pre {
+  margin: 0;
+  padding: 1.5rem;
+  overflow-x: auto;
+  background: #f8f9fa;
+}
+
+.code-block code {
+  font-family: 'Courier New', Consolas, Monaco, monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--gray-900);
+}
+
+/* Example Sections */
+.example-section {
+  margin-bottom: 4rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--gray-300);
+}
+
+.example-section:last-child {
+  border-bottom: none;
+}
+
+.example-section h2 {
+  font-size: 1.75rem;
+  color: var(--gray-900);
+  margin-bottom: 0.5rem;
+}
+
+.example-section p {
+  color: var(--gray-700);
+  margin-bottom: 1.5rem;
+  font-size: 1.0625rem;
+}
+
+/* Data Table */
+.data-table-wrapper {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  font-size: 0.95rem;
+}
+
+.data-table thead {
+  background: linear-gradient(135deg, var(--red) 0%, #a01828 100%);
+  color: white;
+}
+
+.data-table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.data-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--gray-200);
+  color: var(--gray-800);
+  line-height: 1.6;
+}
+
+.data-table tbody tr:hover {
+  background: var(--gray-50);
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.data-table code {
+  background: var(--gray-100);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  color: var(--red);
+  font-weight: 600;
+}
+
+/* ReDoc Container */
+.reference-tab {
+  margin-top: 0;
+  margin-left: -1rem;
+  margin-right: -1rem;
+}
+
+.redoc-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0 1rem 1.5rem 1rem;
+}
+
+.download-button {
+  display: inline-flex;
+  align-items: center;
+  background: linear-gradient(135deg, var(--red) 0%, #a01828 100%);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(220, 20, 60, 0.3);
+}
+
+.download-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 20, 60, 0.4);
+}
+
+#redoc-container {
+  width: 100%;
+  min-height: 100vh;
+  background: white;
+  position: relative;
+}
+
+/* ReDoc overrides for better integration */
+#redoc-container .redoc-wrap {
+  position: relative !important;
+}
+
+/* Sticky sidebar menu */
+#redoc-container .menu-content {
+  position: sticky !important;
+  top: 80px !important; /* Account for main header */
+  max-height: calc(100vh - 80px) !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+/* Ensure smooth scrolling */
+html {
+  scroll-behavior: smooth !important;
+  scroll-padding-top: 200px !important;
+}
+
+/* Prevent ReDoc from interfering with scroll */
+#redoc-container,
+#redoc-container * {
+  scroll-behavior: inherit !important;
+}
+
+/* Fix dropdown glitches - prevent rapid open/close */
+#redoc-container .menu-item-content {
+  transition: none !important;
+}
+
+#redoc-container li[role="menuitem"] {
+  pointer-events: all !important;
+}
+
+#redoc-container label[role="menuitem"] {
+  cursor: pointer !important;
+  user-select: none !important;
+}
+
+/* Prevent animation conflicts */
+#redoc-container ul[role="menu"] {
+  transition: none !important;
+}
+
+#redoc-container .menu-item > label {
+  pointer-events: auto !important;
+}
+
+/* Fix for scrolling sync issues */
+#redoc-container div[data-section-id],
+#redoc-container [id^="operation/"],
+#redoc-container [id^="tag/"] {
+  scroll-margin-top: 200px !important;
+}
+
+/* Improve touch targets on mobile */
+#redoc-container .menu-item {
+  min-height: 44px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Better isolation without breaking ReDoc */
+#redoc-container {
+  contain: layout style;
+  isolation: isolate;
+}
+
+/* Ensure ReDoc content sections are properly positioned */
+#redoc-container .api-content > div > div {
+  scroll-margin-top: 200px;
+  padding-top: 1rem;
+}
+
+/* Target all possible section elements */
+#redoc-container h1[id],
+#redoc-container h2[id],
+#redoc-container div[id],
+#redoc-container section[id] {
+  scroll-margin-top: 200px !important;
+  padding-top: 20px !important;
+}
+
+/* Visual feedback for targeted sections */
+#redoc-container h1[id]:target,
+#redoc-container h2[id]:target {
+  animation: highlight-section 2s ease-out;
+}
+
+@keyframes highlight-section {
+  0% {
+    background-color: rgba(220, 20, 60, 0.1);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+/* Mobile ReDoc adjustments */
+@media (max-width: 768px) {
+  #redoc-container {
+    min-height: calc(100vh - 200px);
+  }
+
+  /* Adjust sticky menu position for smaller header */
+  #redoc-container .menu-content {
+    top: 60px !important;
+    max-height: calc(100vh - 60px) !important;
+  }
+
+  /* Adjust scroll padding for mobile */
+  html {
+    scroll-padding-top: 150px !important;
+  }
+
+  #redoc-container div[data-section-id],
+  #redoc-container [id^="operation/"],
+  #redoc-container [id^="tag/"],
+  #redoc-container h1[id],
+  #redoc-container h2[id],
+  #redoc-container div[id],
+  #redoc-container section[id] {
+    scroll-margin-top: 150px !important;
+    padding-top: 15px !important;
+  }
+
+  /* Ensure content is readable */
+  #redoc-container .api-content {
+    padding: 1rem !important;
+  }
+
+  /* Hide right panel on mobile for better readability */
+  #redoc-container [role="navigation"] + div > div:last-child {
+    display: none !important;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .api-docs-header h1 {
+    font-size: 2rem;
+  }
+
+  .api-docs-header .subtitle {
+    font-size: 1rem;
+  }
+
+  .tabs button {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .api-docs-content {
+    padding: 2rem 1rem;
+  }
+
+  .doc-section h2 {
+    font-size: 1.5rem;
+  }
+
+  .code-block pre {
+    padding: 1rem;
+  }
+
+  .code-block code {
+    font-size: 0.85rem;
+  }
+
+  .data-table {
+    font-size: 0.85rem;
+  }
+
+  .data-table th,
+  .data-table td {
+    padding: 0.75rem;
+  }
+
+  /* Reference tab mobile adjustments */
+  .reference-tab {
+    margin-left: -1rem;
+    margin-right: -1rem;
+  }
+
+  .redoc-actions {
+    padding: 0 1rem;
+  }
+
+  .download-button {
+    font-size: 0.85rem;
+    padding: 0.6rem 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .api-docs-header h1 {
+    font-size: 1.75rem;
+  }
+
+  .tabs {
+    flex-direction: column;
+    gap: 0;
+    padding: 0;
+  }
+
+  .tabs button {
+    border-radius: 0;
+    width: 100%;
+    text-align: left;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .tabs button.active {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-left: 4px solid white;
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .code-examples {
+    gap: 1rem;
+  }
+
+  .example-section {
+    margin-bottom: 2.5rem;
+    padding-bottom: 2rem;
+  }
+
+  .api-docs-content {
+    padding: 1.5rem 0.75rem;
+  }
+
+  .reference-tab {
+    margin: 0 -0.75rem;
+  }
+
+  #redoc-container {
+    min-height: 80vh;
+  }
+}
+
+/* Tablet */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .api-docs-content {
+    padding: 2.5rem 2rem;
+  }
+
+  .code-examples {
+    gap: 1.25rem;
+  }
+}
+
+/* Desktop Large */
+@media (min-width: 1200px) {
+  .api-docs-content {
+    max-width: 1400px;
+  }
+
+  .code-examples {
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  }
+}

@@ -6,6 +6,7 @@ import Search from './pages/Search'
 import Map from './pages/Map'
 import PlaceDetail from './pages/PlaceDetail'
 import About from './pages/About'
+import ApiDocs from './pages/ApiDocs'
 import './App.css'
 
 const GITHUB_REPO = 'https://github.com/Gorskiz/historic-places-canada-2'
@@ -29,14 +30,16 @@ function App() {
       search: 'Search',
       map: 'Map',
       about: 'About',
-      home: 'Home'
+      home: 'Home',
+      api: 'API'
     },
     fr: {
       title: 'Lieux patrimoniaux canadiens',
       search: 'Recherche',
       map: 'Carte',
       about: 'À propos',
-      home: 'Accueil'
+      home: 'Accueil',
+      api: 'API'
     }
   }
 
@@ -58,6 +61,7 @@ function App() {
                 <Link to="/search">{t.search}</Link>
                 <Link to="/map">{t.map}</Link>
                 <Link to="/about">{t.about}</Link>
+                <Link to="/docs">{t.api}</Link>
                 <button onClick={toggleLanguage} className="lang-toggle">
                   {language === 'en' ? 'FR' : 'EN'}
                 </button>
@@ -73,6 +77,7 @@ function App() {
             <Route path="/map" element={<Map language={language} />} />
             <Route path="/place/:id" element={<PlaceDetail language={language} />} />
             <Route path="/about" element={<About language={language} />} />
+            <Route path="/docs" element={<ApiDocs language={language} />} />
           </Routes>
         </main>
 
@@ -84,6 +89,17 @@ function App() {
                 : 'Projet communautaire de préservation open source - Données de Parcs Canada'}
             </p>
             <p className="footer-links">
+              <Link to="/docs" className="footer-link">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '0.5rem', verticalAlign: 'middle' }}>
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+                {language === 'en' ? 'API Documentation' : 'Documentation API'}
+              </Link>
+              <span style={{ margin: '0 1rem', color: '#666' }}>•</span>
               <a href={GITHUB_RELEASE} target="_blank" rel="noopener noreferrer" className="footer-link download-link">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '0.5rem', verticalAlign: 'middle' }}>
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />

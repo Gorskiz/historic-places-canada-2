@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { config } from '../config'
 import SEO from '../components/SEO'
 import './About.css'
@@ -53,6 +54,9 @@ function About({ language }) {
         'Ensure the data never disappears',
         'Fork the project for their own use'
       ],
+      apiAccess: 'API Access',
+      apiAccessText: 'Developers and researchers can access the complete dataset programmatically through our free, public API. Build applications, conduct research, or integrate historic places data into your projects.',
+      viewApiDocs: 'View API Documentation',
       contribute: 'Contribute',
       contributeText: 'Found an issue? Want to help? This is an open source project and we welcome contributions! Visit our GitHub repository to contribute code, report bugs, or suggest improvements. Together, we can preserve Canadian heritage for future generations.',
       github: 'View on GitHub',
@@ -98,6 +102,9 @@ function About({ language }) {
         'Assurer que les données ne disparaissent jamais',
         'Forker le projet pour leur propre usage'
       ],
+      apiAccess: 'Accès API',
+      apiAccessText: 'Les développeurs et chercheurs peuvent accéder à l\'ensemble de données complet par programmation via notre API publique gratuite. Créez des applications, menez des recherches ou intégrez des données de lieux patrimoniaux dans vos projets.',
+      viewApiDocs: 'Voir la documentation API',
       contribute: 'Contribuer',
       contributeText: 'Vous avez trouvé un problème? Vous voulez aider? Ceci est un projet open source et nous accueillons les contributions! Visitez notre dépôt GitHub pour contribuer du code, signaler des bogues ou suggérer des améliorations. Ensemble, nous pouvons préserver le patrimoine canadien pour les générations futures.',
       github: 'Voir sur GitHub',
@@ -161,6 +168,21 @@ function About({ language }) {
               <li key={idx}>{point}</li>
             ))}
           </ul>
+        </section>
+
+        <section className="about-section">
+          <h2>{t.apiAccess}</h2>
+          <p>{t.apiAccessText}</p>
+          <Link to="/docs" className="github-button">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '0.5rem' }}>
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            {t.viewApiDocs}
+          </Link>
         </section>
 
         <section className="about-section">
