@@ -5,9 +5,23 @@
 
 .about-page h1 {
   font-size: 2.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem;
   text-align: center;
   color: var(--gray-900);
+}
+
+.about-subtitle {
+  text-align: center;
+  font-size: 1.25rem;
+  color: var(--red);
+  font-weight: 600;
+  margin-bottom: 2.5rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, rgba(220, 20, 60, 0.08) 0%, rgba(220, 20, 60, 0.04) 100%);
+  border-radius: 12px;
+  display: inline-block;
+  margin-left: 50%;
+  transform: translateX(-50%);
 }
 
 .about-section {
@@ -51,20 +65,25 @@
 }
 
 .github-button {
-  display: inline-block;
-  background: var(--red);
+  display: inline-flex;
+  align-items: center;
+  background: linear-gradient(135deg, #24292e 0%, #1a1d21 100%);
   color: white;
-  padding: 0.875rem 1.75rem;
-  border-radius: 8px;
+  padding: 1rem 2rem;
+  border-radius: 10px;
   font-weight: 600;
+  font-size: 1.0625rem;
   margin-top: 1rem;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .github-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(220, 20, 60, 0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
   text-decoration: none;
+  background: linear-gradient(135deg, #2d333b 0%, #24292e 100%);
 }
 
 @media (max-width: 768px) {
