@@ -46,7 +46,7 @@ function App() {
             <div className="header-content">
               <Link to="/" className="logo">
                 <img src="/maple-leaf-icon.webp" alt="Canada" className="logo-icon" />
-                <h1>{t.title}</h1>
+                <h1>{t.title}<span className="cheeky-two">2</span></h1>
               </Link>
               <nav className="nav">
                 <Link to="/">{t.home}</Link>

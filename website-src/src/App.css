@@ -250,3 +250,28 @@
     max-width: 280px;
   }
 }
+
+.cheeky-two {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  font-size: 14px;
+  font-weight: 700;
+  margin-left: 8px;
+  transform: translateY(-4px) rotate(12deg);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.cheeky-two:hover {
+  transform: translateY(-6px) rotate(0deg) scale(1.1);
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  cursor: help;
+}
