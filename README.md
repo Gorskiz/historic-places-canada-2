@@ -1,4 +1,4 @@
-# Historic Places Canada 2 ��🇦
+# Historic Places Canada 2
 
 **The Open Source Rescue of Canada's Digital Heritage.**
 
