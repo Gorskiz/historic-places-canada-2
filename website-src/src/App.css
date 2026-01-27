@@ -149,6 +149,16 @@
   color: var(--red);
 }
 
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
 .footer-link {
   display: inline-flex;
   align-items: center;
@@ -157,6 +167,19 @@
   border-radius: 8px;
   background: rgba(220, 20, 60, 0.1);
   transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.download-link {
+  background: rgba(255, 255, 255, 0.1);
+  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.download-link:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: white;
+  transform: translateY(-2px);
 }
 
 .footer-link:hover {
