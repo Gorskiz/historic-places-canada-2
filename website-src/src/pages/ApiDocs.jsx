@@ -102,8 +102,8 @@ function ApiDocs({ language }) {
 
                   // Try multiple selectors to find the target
                   let target = document.getElementById(targetId) ||
-                               document.querySelector(`[data-section-id="${targetId}"]`) ||
-                               document.querySelector(`[id="${targetId}"]`)
+                    document.querySelector(`[data-section-id="${targetId}"]`) ||
+                    document.querySelector(`[id="${targetId}"]`)
 
                   if (target) {
                     console.log('Found target element:', target)
@@ -332,7 +332,7 @@ function ApiDocs({ language }) {
     example1: {
       javascript: `// Fetch places from Ontario
 const response = await fetch(
-  'https://historicplaces2.workers.dev/api/places?lang=en&province=Ontario&limit=10'
+  'https://historicplaces2.ca/api/places?lang=en&province=Ontario&limit=10'
 );
 const data = await response.json();
 
@@ -347,7 +347,7 @@ data.places.forEach(place => {
 
 # Fetch places from Ontario
 response = requests.get(
-    'https://historicplaces2.workers.dev/api/places',
+    'https://historicplaces2.ca/api/places',
     params={'lang': 'en', 'province': 'Ontario', 'limit': 10}
 )
 data = response.json()
@@ -358,12 +358,12 @@ print('Remaining requests:', response.headers.get('X-RateLimit-Remaining'))
 # Display results
 for place in data['places']:
     print(f"{place['name']} - {place['municipality']}")`,
-      curl: `curl -i "https://historicplaces2.workers.dev/api/places?lang=en&province=Ontario&limit=10"`
+      curl: `curl -i "https://historicplaces2.ca/api/places?lang=en&province=Ontario&limit=10"`
     },
     example2: {
       javascript: `// Search for castles in Quebec
 const response = await fetch(
-  'https://historicplaces2.workers.dev/api/search?q=castle&province=Quebec&lang=en&limit=20'
+  'https://historicplaces2.ca/api/search?q=castle&province=Quebec&lang=en&limit=20'
 );
 const data = await response.json();
 
@@ -377,7 +377,7 @@ data.results.forEach(place => {
 
 # Search for castles in Quebec
 response = requests.get(
-    'https://historicplaces2.workers.dev/api/search',
+    'https://historicplaces2.ca/api/search',
     params={'q': 'castle', 'province': 'Quebec', 'lang': 'en', 'limit': 20}
 )
 data = response.json()
@@ -387,13 +387,13 @@ print(f"Showing {data['count']} results")
 
 for place in data['results']:
     print(f"{place['name']} - {place['recognition_type']}")`,
-      curl: `curl "https://historicplaces2.workers.dev/api/search?q=castle&province=Quebec&lang=en&limit=20"`
+      curl: `curl "https://historicplaces2.ca/api/search?q=castle&province=Quebec&lang=en&limit=20"`
     },
     example3: {
       javascript: `// Get detailed information about a specific place
 const placeId = 123;
 const response = await fetch(
-  \`https://historicplaces2.workers.dev/api/places/\${placeId}?lang=en\`
+  \`https://historicplaces2.ca/api/places/\${placeId}?lang=en\`
 );
 const data = await response.json();
 
@@ -411,7 +411,7 @@ data.images.forEach((img, index) => {
 # Get detailed information about a specific place
 place_id = 123
 response = requests.get(
-    f'https://historicplaces2.workers.dev/api/places/{place_id}',
+    f'https://historicplaces2.ca/api/places/{place_id}',
     params={'lang': 'en'}
 )
 data = response.json()
@@ -424,13 +424,13 @@ print('Images:', len(data['images']))
 for i, img in enumerate(data['images']):
     print(f"Image {i + 1}: {img['r2_url']}")
     print(f"  Alt: {img['alt']}")`,
-      curl: `curl "https://historicplaces2.workers.dev/api/places/123?lang=en"`
+      curl: `curl "https://historicplaces2.ca/api/places/123?lang=en"`
     },
     example4: {
       javascript: `// Get places within geographic bounds (Ottawa area)
 const bounds = '45.0,-76.0,46.0,-75.0'; // minLat,minLng,maxLat,maxLng
 const response = await fetch(
-  \`https://historicplaces2.workers.dev/api/map?lang=en&bounds=\${bounds}\`
+  \`https://historicplaces2.ca/api/map?lang=en&bounds=\${bounds}\`
 );
 const data = await response.json();
 
@@ -445,7 +445,7 @@ data.places.slice(0, 5).forEach(place => {
 # Get places within geographic bounds (Ottawa area)
 bounds = '45.0,-76.0,46.0,-75.0'  # minLat,minLng,maxLat,maxLng
 response = requests.get(
-    'https://historicplaces2.workers.dev/api/map',
+    'https://historicplaces2.ca/api/map',
     params={'lang': 'en', 'bounds': bounds}
 )
 data = response.json()
@@ -455,19 +455,19 @@ print(f"Found {data['count']} places in bounds")
 # Display first 5 places
 for place in data['places'][:5]:
     print(f"{place['name']} at [{place['latitude']}, {place['longitude']}]")`,
-      curl: `curl "https://historicplaces2.workers.dev/api/map?lang=en&bounds=45.0,-76.0,46.0,-75.0"`
+      curl: `curl "https://historicplaces2.ca/api/map?lang=en&bounds=45.0,-76.0,46.0,-75.0"`
     }
   }
 
   const quickStartCode = {
-    javascript: `const response = await fetch('https://historicplaces2.workers.dev/api/places?lang=en&province=Ontario&limit=10');
+    javascript: `const response = await fetch('https://historicplaces2.ca/api/places?lang=en&province=Ontario&limit=10');
 const data = await response.json();
 console.log(data.places);`,
     python: `import requests
-response = requests.get('https://historicplaces2.workers.dev/api/places', params={'lang': 'en', 'province': 'Ontario', 'limit': 10})
+response = requests.get('https://historicplaces2.ca/api/places', params={'lang': 'en', 'province': 'Ontario', 'limit': 10})
 data = response.json()
 print(data['places'])`,
-    curl: `curl "https://historicplaces2.workers.dev/api/places?lang=en&province=Ontario&limit=10"`
+    curl: `curl "https://historicplaces2.ca/api/places?lang=en&province=Ontario&limit=10"`
   }
 
   return (

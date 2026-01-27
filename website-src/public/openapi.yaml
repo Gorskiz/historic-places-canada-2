@@ -32,13 +32,13 @@ info:
 
   contact:
     name: API Support
-    url: https://historicplaces2.workers.dev
+    url: https://historicplaces2.ca
   license:
     name: Open Data
     url: https://open.canada.ca/en/open-government-licence-canada
 
 servers:
-  - url: https://historicplaces2.workers.dev
+  - url: https://historicplaces2.ca
     description: Production API
   - url: http://localhost:8787
     description: Local development
@@ -64,7 +64,7 @@ paths:
 
         **JavaScript (Fetch API)**:
         ```javascript
-        const response = await fetch('https://historicplaces2.workers.dev/api/places?lang=en&province=Ontario&limit=20');
+        const response = await fetch('https://historicplaces2.ca/api/places?lang=en&province=Ontario&limit=20');
         const data = await response.json();
         console.log(data.places);
         ```
@@ -72,7 +72,7 @@ paths:
         **Python (requests)**:
         ```python
         import requests
-        response = requests.get('https://historicplaces2.workers.dev/api/places', params={
+        response = requests.get('https://historicplaces2.ca/api/places', params={
             'lang': 'en',
             'province': 'Ontario',
             'limit': 20
@@ -83,7 +83,7 @@ paths:
 
         **cURL**:
         ```bash
-        curl "https://historicplaces2.workers.dev/api/places?lang=en&province=Ontario&limit=20"
+        curl "https://historicplaces2.ca/api/places?lang=en&province=Ontario&limit=20"
         ```
       tags:
         - Places
@@ -189,7 +189,7 @@ paths:
 
         **JavaScript**:
         ```javascript
-        const response = await fetch('https://historicplaces2.workers.dev/api/places/123?lang=en');
+        const response = await fetch('https://historicplaces2.ca/api/places/123?lang=en');
         const data = await response.json();
         console.log(data.place.name);
         console.log(data.images);
@@ -198,7 +198,7 @@ paths:
         **Python**:
         ```python
         import requests
-        response = requests.get('https://historicplaces2.workers.dev/api/places/123', params={'lang': 'en'})
+        response = requests.get('https://historicplaces2.ca/api/places/123', params={'lang': 'en'})
         data = response.json()
         print(data['place']['name'])
         print(data['images'])
@@ -206,7 +206,7 @@ paths:
 
         **cURL**:
         ```bash
-        curl "https://historicplaces2.workers.dev/api/places/123?lang=en"
+        curl "https://historicplaces2.ca/api/places/123?lang=en"
         ```
       tags:
         - Places
@@ -270,7 +270,7 @@ paths:
 
         **JavaScript**:
         ```javascript
-        const response = await fetch('https://historicplaces2.workers.dev/api/search?q=castle&province=Quebec&limit=10');
+        const response = await fetch('https://historicplaces2.ca/api/search?q=castle&province=Quebec&limit=10');
         const data = await response.json();
         console.log(data.results);
         console.log(`Found ${data.total} total matches`);
@@ -279,7 +279,7 @@ paths:
         **Python**:
         ```python
         import requests
-        response = requests.get('https://historicplaces2.workers.dev/api/search', params={
+        response = requests.get('https://historicplaces2.ca/api/search', params={
             'q': 'castle',
             'province': 'Quebec',
             'limit': 10
@@ -290,7 +290,7 @@ paths:
 
         **cURL**:
         ```bash
-        curl "https://historicplaces2.workers.dev/api/search?q=castle&province=Quebec&limit=10"
+        curl "https://historicplaces2.ca/api/search?q=castle&province=Quebec&limit=10"
         ```
       tags:
         - Search
@@ -431,7 +431,7 @@ paths:
 
         **JavaScript**:
         ```javascript
-        const response = await fetch('https://historicplaces2.workers.dev/api/filters?lang=en');
+        const response = await fetch('https://historicplaces2.ca/api/filters?lang=en');
         const data = await response.json();
         console.log('Provinces:', data.provinces);
         console.log('Types:', data.types);
@@ -440,14 +440,14 @@ paths:
         **Python**:
         ```python
         import requests
-        response = requests.get('https://historicplaces2.workers.dev/api/filters', params={'lang': 'en'})
+        response = requests.get('https://historicplaces2.ca/api/filters', params={'lang': 'en'})
         data = response.json()
         print('Provinces:', data['provinces'])
         ```
 
         **cURL**:
         ```bash
-        curl "https://historicplaces2.workers.dev/api/filters?lang=en"
+        curl "https://historicplaces2.ca/api/filters?lang=en"
         ```
       tags:
         - Metadata
@@ -534,7 +534,7 @@ paths:
         const bounds = map.getBounds();
         const boundsStr = `${bounds.getSouth()},${bounds.getWest()},${bounds.getNorth()},${bounds.getEast()}`;
 
-        const response = await fetch(`https://historicplaces2.workers.dev/api/map?lang=en&bounds=${boundsStr}`);
+        const response = await fetch(`https://historicplaces2.ca/api/map?lang=en&bounds=${boundsStr}`);
         const data = await response.json();
 
         // Add markers to map
@@ -548,7 +548,7 @@ paths:
         **Python**:
         ```python
         import requests
-        response = requests.get('https://historicplaces2.workers.dev/api/map', params={
+        response = requests.get('https://historicplaces2.ca/api/map', params={
             'lang': 'en',
             'bounds': '45.0,-76.0,46.0,-75.0'  # Ottawa area
         })
@@ -558,7 +558,7 @@ paths:
 
         **cURL**:
         ```bash
-        curl "https://historicplaces2.workers.dev/api/map?lang=en&bounds=45.0,-76.0,46.0,-75.0"
+        curl "https://historicplaces2.ca/api/map?lang=en&bounds=45.0,-76.0,46.0,-75.0"
         ```
       tags:
         - Geography
@@ -617,7 +617,7 @@ paths:
 
         **JavaScript**:
         ```javascript
-        const response = await fetch('https://historicplaces2.workers.dev/api/provinces?lang=en');
+        const response = await fetch('https://historicplaces2.ca/api/provinces?lang=en');
         const data = await response.json();
         data.provinces.forEach(p => {
           console.log(`${p.province}: ${p.count} places`);
@@ -627,7 +627,7 @@ paths:
         **Python**:
         ```python
         import requests
-        response = requests.get('https://historicplaces2.workers.dev/api/provinces', params={'lang': 'en'})
+        response = requests.get('https://historicplaces2.ca/api/provinces', params={'lang': 'en'})
         data = response.json()
         for p in data['provinces']:
             print(f"{p['province']}: {p['count']} places")
@@ -635,7 +635,7 @@ paths:
 
         **cURL**:
         ```bash
-        curl "https://historicplaces2.workers.dev/api/provinces?lang=en"
+        curl "https://historicplaces2.ca/api/provinces?lang=en"
         ```
       tags:
         - Geography
@@ -690,7 +690,7 @@ paths:
 
         **JavaScript**:
         ```javascript
-        const response = await fetch('https://historicplaces2.workers.dev/api/stats?lang=en');
+        const response = await fetch('https://historicplaces2.ca/api/stats?lang=en');
         const data = await response.json();
         console.log(`Total places: ${data.totalPlaces}`);
         console.log(`Total images: ${data.totalImages}`);
@@ -699,7 +699,7 @@ paths:
         **Python**:
         ```python
         import requests
-        response = requests.get('https://historicplaces2.workers.dev/api/stats', params={'lang': 'en'})
+        response = requests.get('https://historicplaces2.ca/api/stats', params={'lang': 'en'})
         data = response.json()
         print(f"Total places: {data['totalPlaces']}")
         print(f"Total images: {data['totalImages']}")
@@ -707,7 +707,7 @@ paths:
 
         **cURL**:
         ```bash
-        curl "https://historicplaces2.workers.dev/api/stats?lang=en"
+        curl "https://historicplaces2.ca/api/stats?lang=en"
         ```
       tags:
         - Metadata
