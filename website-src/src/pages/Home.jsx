@@ -568,22 +568,18 @@ function Home({ language }) {
               </div>
             </div>
             <div className="mission-visual">
-              <div className="mission-card card-1">
-                <div className="mc-icon">🇨🇦</div>
-                <div className="mc-content">
-                  <div className="mc-bar" style={{ width: '80%' }}></div>
-                  <div className="mc-bar" style={{ width: '60%' }}></div>
+              <div className="pixel-flag-container">
+                <div className="pixel-flag-wrapper">
+                  <div className="pixel-flag">
+                    <div className="flag-left-bar"></div>
+                    <div className="flag-center">
+                      <div className="pixel-maple-leaf"></div>
+                    </div>
+                    <div className="flag-right-bar"></div>
+                  </div>
                 </div>
-              </div>
-              <div className="mission-card card-2">
-                <div className="mc-icon">🏛️</div>
-                <div className="mc-content">
-                  <div className="mc-bar" style={{ width: '70%' }}></div>
-                  <div className="mc-bar" style={{ width: '40%' }}></div>
-                </div>
-              </div>
-              <div className="mission-showcase">
-                <div className="gradient-glow"></div>
+                <div className="flag-glow"></div>
+                <div className="pixel-particles"></div>
               </div>
             </div>
           </div>
