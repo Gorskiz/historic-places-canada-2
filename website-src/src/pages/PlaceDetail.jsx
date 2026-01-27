@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { MapContainer, TileLayer, Marker } from 'react-leaflet'
 import { config } from '../config'
+import SEO from '../components/SEO'
 import './PlaceDetail.css'
 
 function PlaceDetail({ language }) {
@@ -134,6 +135,36 @@ function PlaceDetail({ language }) {
 
   return (
     <div className="place-detail">
+      <SEO
+        title={`${place.name} - Historic Places Canada`}
+        description={description.substring(0, 155) || place.name}
+        image={images.length > 0 ? (images[0].r2_url || images[0].url) : undefined}
+      />
+      {/* Structured Data for Place */}
+      <script type="application/ld+json">
+        {JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Place",
+          "name": place.name,
+          "description": description || place.name,
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": place.municipality || '',
+            "addressRegion": place.province || '',
+            "addressCountry": "CA"
+          },
+          ...(place.latitude && place.longitude ? {
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": place.latitude,
+              "longitude": place.longitude
+            }
+          } : {}),
+          ...(images.length > 0 ? {
+            "image": images.map(img => img.r2_url || img.url)
+          } : {})
+        })}
+      </script>
       <div className="container">
         <Link to="/search" className="back-link">{t.back}</Link>
 

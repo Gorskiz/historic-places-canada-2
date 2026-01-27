@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup, ScaleControl, ZoomControl } fro
 import MarkerClusterGroup from 'react-leaflet-cluster'
 import { Link } from 'react-router-dom'
 import { config } from '../config'
+import SEO from '../components/SEO'
 import 'leaflet/dist/leaflet.css'
 import './Map.css'
 
@@ -82,6 +83,13 @@ function Map({ language }) {
 
   return (
     <div className="map-page">
+      <SEO
+        title={language === 'en' ? 'Interactive Map - Historic Places Canada' : 'Carte interactive - Lieux patrimoniaux du Canada'}
+        description={language === 'en'
+          ? 'Explore historic places across Canada on an interactive map. Discover heritage sites near you.'
+          : 'Explorez les lieux patrimoniaux à travers le Canada sur une carte interactive. Découvrez des sites patrimoniaux près de chez vous.'
+        }
+      />
       {/* Floating Search Control */}
       <div className="map-overlay-control">
         <div className="search-container">

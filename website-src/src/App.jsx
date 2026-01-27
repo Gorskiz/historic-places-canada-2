@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import ScrollToTop from './components/ScrollToTop'
 import Home from './pages/Home'
 import Search from './pages/Search'
@@ -13,6 +13,11 @@ const GITHUB_RELEASE = 'https://github.com/Gorskiz/historic-places-canada-2/rele
 
 function App() {
   const [language, setLanguage] = useState('en')
+
+  // Update HTML lang attribute for accessibility and SEO
+  useEffect(() => {
+    document.documentElement.lang = language === 'en' ? 'en-CA' : 'fr-CA'
+  }, [language])
 
   const toggleLanguage = () => {
     setLanguage(lang => lang === 'en' ? 'fr' : 'en')

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { config } from '../config'
+import SEO from '../components/SEO'
 import './About.css'
 
 const GITHUB_REPO = 'https://github.com/Gorskiz/historic-places-canada-2'
@@ -111,6 +112,13 @@ function About({ language }) {
 
   return (
     <div className="about-page">
+      <SEO
+        title={language === 'en' ? 'About - Historic Places Canada' : 'À propos - Lieux patrimoniaux du Canada'}
+        description={language === 'en'
+          ? 'Learn about our community-led open source project to preserve over 13,000 historic places across Canada.'
+          : 'Découvrez notre projet communautaire open source visant à préserver plus de 13 000 lieux patrimoniaux à travers le Canada.'
+        }
+      />
       <div className="container">
         <h1>{t.title}</h1>
         <p className="about-subtitle">{t.subtitle}</p>

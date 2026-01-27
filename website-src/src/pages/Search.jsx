@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { config } from '../config'
+import SEO from '../components/SEO'
 import './Search.css'
 
 function Search({ language }) {
@@ -324,6 +325,13 @@ function Search({ language }) {
 
   return (
     <div className="search-page">
+      <SEO
+        title={language === 'en' ? 'Search Historic Places - Canada' : 'Rechercher des lieux patrimoniaux - Canada'}
+        description={language === 'en'
+          ? 'Search and discover historic places across Canada. Filter by province, municipality, theme, and more.'
+          : 'Recherchez et découvrez des lieux patrimoniaux à travers le Canada. Filtrez par province, municipalité, thème et plus encore.'
+        }
+      />
       <div className="container">
         <h2>{t.title}</h2>
 

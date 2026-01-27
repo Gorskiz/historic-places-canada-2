@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
 import { config } from '../config'
+import SEO from '../components/SEO'
 import './Home.css'
 
 function Home({ language }) {
@@ -224,6 +225,41 @@ function Home({ language }) {
 
   return (
     <div className="home">
+      <SEO
+        title={language === 'en' ? 'Canadian Historic Places - Preserving Heritage' : 'Lieux patrimoniaux canadiens - Préserver le patrimoine'}
+        description={language === 'en'
+          ? `Explore over ${stats?.totalPlaces?.toLocaleString() || '13,000'} historic places across Canada. An open-source community project preserving Canadian architectural and cultural heritage.`
+          : `Explorez plus de ${stats?.totalPlaces?.toLocaleString() || '13 000'} lieux patrimoniaux à travers le Canada. Un projet communautaire open source préservant le patrimoine architectural et culturel canadien.`
+        }
+      />
+
+      {/* Structured Data for SEO */}
+      <script type="application/ld+json">
+        {JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "name": language === 'en' ? "Historic Places Canada" : "Lieux patrimoniaux du Canada",
+          "description": language === 'en'
+            ? "Explore over 13,000 historic places across Canada"
+            : "Explorez plus de 13 000 lieux patrimoniaux à travers le Canada",
+          "url": window.location.origin,
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": `${window.location.origin}/search?query={search_term_string}`
+            },
+            "query-input": "required name=search_term_string"
+          },
+          "inLanguage": [language === 'en' ? "en-CA" : "fr-CA"],
+          "about": {
+            "@type": "Thing",
+            "name": "Canadian Heritage",
+            "description": "Historic and cultural places across Canada"
+          }
+        })}
+      </script>
+
       <section className="hero">
         <div className="hero-background">
           <div className="gradient-blob blob-1"></div>
