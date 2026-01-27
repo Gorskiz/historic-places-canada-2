@@ -260,10 +260,20 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 				ORDER BY jurisdiction
 			`).bind(lang).all();
 
+			const themes = await env.DB.prepare(`
+				SELECT TRIM(value) as theme, COUNT(*) as count
+				FROM places, json_each('["' || REPLACE(REPLACE(themes, ', ', '","'), ',', '","') || '"]')
+				WHERE language = ? AND themes IS NOT NULL AND themes != ''
+				GROUP BY theme
+				ORDER BY count DESC
+				LIMIT 12
+			`).bind(lang).all();
+
 			return jsonResponse({
 				provinces: provinces.results,
 				types: types.results,
-				jurisdictions: jurisdictions.results
+				jurisdictions: jurisdictions.results,
+				themes: themes.results
 			});
 		}
 

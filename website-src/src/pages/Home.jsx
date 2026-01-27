@@ -5,6 +5,7 @@ import './Home.css'
 
 function Home({ language }) {
   const [stats, setStats] = useState(null)
+  const [filters, setFilters] = useState(null)
   const [visibleSection, setVisibleSection] = useState(0)
   const [animatedStats, setAnimatedStats] = useState({ total: 0, provinces: 0, themes: 0, images: 0 })
   const [featuredPlaces, setFeaturedPlaces] = useState([])
@@ -18,6 +19,11 @@ function Home({ language }) {
       .then(res => res.json())
       .then(data => setStats(data))
       .catch(err => console.error('Error loading stats:', err))
+
+    fetch(`${config.endpoints.filters}?lang=${language}`)
+      .then(res => res.json())
+      .then(data => setFilters(data))
+      .catch(err => console.error('Error loading filters:', err))
   }, [language])
 
   // Fetch featured places with images
@@ -156,10 +162,19 @@ function Home({ language }) {
       mapDesc: 'Explore sites geographically across Canada',
       bilingualTitle: 'Bilingual',
       bilingualDesc: 'Full content in English and French',
-      total: 'Total Places',
-      provinces: 'Provinces & Territories',
-      themes: 'Heritage Themes',
-      images: 'Total Images'
+      regionsEyebrow: 'Explore Canada',
+      regionsTitle: 'Browse by Region',
+      regionsDesc: 'Discover historic places across all 13 provinces and territories.',
+      themesEyebrow: 'Curated Collections',
+      themesTitle: 'Browse by Theme',
+      viewAllCollections: 'View All Collections',
+      missionBadge: 'Community Led',
+      missionTitle: 'Preserving Our Digital Heritage',
+      missionText: `In 2026, the official HistoricPlaces.ca database was shut down. This open-source initiative was created to rescue over ${stats?.totalPlaces?.toLocaleString() || '13,000'} invaluable records, ensuring Canada's architectural and cultural history remains accessible to everyone.`,
+      openSourceTitle: 'Open Source',
+      openSourceDesc: 'Built by the community, for the community.',
+      dataTitle: 'Open Data',
+      dataDesc: 'All data is available for research and education.'
     },
     fr: {
       hero: 'Préserver le patrimoine canadien',
@@ -179,10 +194,19 @@ function Home({ language }) {
       mapDesc: 'Explorez les sites géographiquement à travers le Canada',
       bilingualTitle: 'Bilingue',
       bilingualDesc: 'Contenu complet en anglais et en français',
-      total: 'Lieux totaux',
-      provinces: 'Provinces et territoires',
-      themes: 'Thèmes patrimoniaux',
-      images: 'Images totales'
+      regionsEyebrow: 'Explorer le Canada',
+      regionsTitle: 'Parcourir par région',
+      regionsDesc: 'Découvrez des lieux historiques dans les 13 provinces et territoires.',
+      themesEyebrow: 'Collections organisées',
+      themesTitle: 'Parcourir par thème',
+      viewAllCollections: 'Voir toutes les collections',
+      missionBadge: 'Projet communautaire',
+      missionTitle: 'Préserver notre patrimoine numérique',
+      missionText: `En 2026, la base de données officielle LieuxPatrimoniaux.ca a été fermée. Cette initiative open-source a été créée pour sauver plus de ${stats?.totalPlaces?.toLocaleString() || '13 000'} dossiers précieux, garantissant que l'histoire architecturale et culturelle du Canada reste accessible à tous.`,
+      openSourceTitle: 'Open Source',
+      openSourceDesc: 'Construit par la communauté, pour la communauté.',
+      dataTitle: 'Données ouvertes',
+      dataDesc: 'Toutes les données sont disponibles pour la recherche.'
     }
   }
 
@@ -206,9 +230,8 @@ function Home({ language }) {
               {featuredPlaces.map((place, index) => (
                 <div
                   key={place.id}
-                  className={`carousel-slide ${index === currentSlide ? 'active' : ''} ${
-                    index === (currentSlide - 1 + featuredPlaces.length) % featuredPlaces.length ? 'prev' : ''
-                  } ${index === (currentSlide + 1) % featuredPlaces.length ? 'next' : ''}`}
+                  className={`carousel-slide ${index === currentSlide ? 'active' : ''} ${index === (currentSlide - 1 + featuredPlaces.length) % featuredPlaces.length ? 'prev' : ''
+                    } ${index === (currentSlide + 1) % featuredPlaces.length ? 'next' : ''}`}
                 >
                   <div className="carousel-image-wrapper">
                     <img
@@ -331,7 +354,7 @@ function Home({ language }) {
                 <div className="stat">
                   <div className="stat-icon">
                     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M3 21h18M5 21V7l8-4 8 4v14M8 21v-4h8v4"/>
+                      <path d="M3 21h18M5 21V7l8-4 8 4v14M8 21v-4h8v4" />
                     </svg>
                   </div>
                   <div className="stat-value">{animatedStats.total.toLocaleString()}</div>
@@ -353,7 +376,7 @@ function Home({ language }) {
                     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <circle cx="12" cy="12" r="10"></circle>
                       <line x1="2" y1="12" x2="22" y2="12"></line>
-                      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
                     </svg>
                   </div>
                   <div className="stat-value">{animatedStats.provinces}</div>
@@ -362,7 +385,7 @@ function Home({ language }) {
                 <div className="stat">
                   <div className="stat-icon">
                     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                     </svg>
                   </div>
                   <div className="stat-value">{animatedStats.themes}+</div>
@@ -374,68 +397,149 @@ function Home({ language }) {
         )}
       </section>
 
-      <section className="section section-about" ref={sectionRefs[0]}>
+      {/* Section 1: Explore by Region */}
+      <section className="section section-regions" ref={sectionRefs[0]}>
         <div className="container">
-          <div className={`section-content ${visibleSection >= 0 ? 'visible' : ''}`}>
-            <div className="section-number">01</div>
-            <div className="open-source-badge">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style={{ marginRight: '0.5rem' }}>
-                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+          <div className={`section-header ${visibleSection >= 0 ? 'visible' : ''}`}>
+            <span className="section-eyebrow">{t.regionsEyebrow}</span>
+            <h3>{t.regionsTitle}</h3>
+            <p className="large-text">{t.regionsDesc}</p>
+          </div>
+
+          <div className={`regions-grid ${visibleSection >= 0 ? 'visible' : ''}`}>
+            {filters?.provinces?.map((prov, index) => (
+              <Link
+                to={`/search?province=${encodeURIComponent(prov.province)}`}
+                key={prov.province}
+                className="region-card"
+                style={{ '--delay': `${index * 50}ms` }}
+              >
+                <div className="region-content">
+                  <span className="region-name">{prov.province}</span>
+                  <span className="region-count">
+                    {prov.count.toLocaleString()} {language === 'en' ? 'places' : 'lieux'}
+                  </span>
+                </div>
+                <div className="region-arrow">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </div>
+              </Link>
+            ))}
+            {!filters && (
+              // Skeleton loading for regions
+              [...Array(13)].map((_, i) => (
+                <div key={i} className="region-card skeleton"></div>
+              ))
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* Section 2: Curated Collections (Themes) */}
+      <section className="section section-themes" ref={sectionRefs[1]}>
+        <div className="container">
+          <div className={`section-header ${visibleSection >= 1 ? 'visible' : ''}`}>
+            <span className="section-eyebrow">{t.themesEyebrow}</span>
+            <h3>{t.themesTitle}</h3>
+          </div>
+
+          <div className={`themes-grid ${visibleSection >= 1 ? 'visible' : ''}`}>
+            {filters?.themes?.slice(0, 8).map((theme, index) => (
+              <Link
+                to={`/search?theme=${encodeURIComponent(theme.theme)}`}
+                key={theme.theme}
+                className="theme-card"
+                style={{ '--delay': `${index * 100}ms` }}
+              >
+                <div className="theme-icon-wrapper">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                  </svg>
+                </div>
+                <h4>{theme.theme}</h4>
+                <div className="theme-meta">
+                  <span>{theme.count} {language === 'en' ? 'places' : 'lieux'}</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          <div className="themes-actions">
+            <Link to="/search" className="text-link">
+              {t.viewAllCollections}
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
               </svg>
-              {t.openSourceBadge}
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Section 3: Mission / About */}
+      <section className="section section-mission" ref={sectionRefs[2]}>
+        <div className="container">
+          <div className={`mission-wrapper ${visibleSection >= 2 ? 'visible' : ''}`}>
+            <div className="mission-content">
+              <div className="mission-badge">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                </svg>
+                {t.missionBadge}
+              </div>
+              <h3>{t.missionTitle}</h3>
+              <p>{t.missionText}</p>
+
+              <div className="mission-features">
+                <div className="m-feature">
+                  <div className="mf-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <line x1="2" y1="12" x2="22" y2="12"></line>
+                      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                    </svg>
+                  </div>
+                  <div>
+                    <strong>{t.openSourceTitle}</strong>
+                    <p>{t.openSourceDesc}</p>
+                  </div>
+                </div>
+                <div className="m-feature">
+                  <div className="mf-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="7 10 12 15 17 10"></polyline>
+                      <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                  </div>
+                  <div>
+                    <strong>{t.dataTitle}</strong>
+                    <p>{t.dataDesc}</p>
+                  </div>
+                </div>
+              </div>
             </div>
-            <h3>{t.about}</h3>
-            <p className="large-text">{t.aboutText}</p>
-          </div>
-        </div>
-      </section>
-
-      <section className="section section-why" ref={sectionRefs[1]}>
-        <div className="container">
-          <div className={`section-content ${visibleSection >= 1 ? 'visible' : ''}`}>
-            <div className="section-number">02</div>
-            <h3>{t.why}</h3>
-            <p className="large-text">{t.whyText}</p>
-          </div>
-        </div>
-      </section>
-
-      <section className="section section-features" ref={sectionRefs[2]}>
-        <div className="container">
-          <div className={`section-content ${visibleSection >= 2 ? 'visible' : ''}`}>
-            <div className="section-number">03</div>
-            <h3>{t.features}</h3>
-            <div className="features-grid">
-              <div className="feature-card" style={{ '--delay': '0ms' }}>
-                <div className="feature-icon">
-                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                  </svg>
+            <div className="mission-visual">
+              <div className="mission-card card-1">
+                <div className="mc-icon">🇨🇦</div>
+                <div className="mc-content">
+                  <div className="mc-bar" style={{ width: '80%' }}></div>
+                  <div className="mc-bar" style={{ width: '60%' }}></div>
                 </div>
-                <h4>{t.searchTitle}</h4>
-                <p>{t.searchDesc}</p>
               </div>
-              <div className="feature-card" style={{ '--delay': '100ms' }}>
-                <div className="feature-icon">
-                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
-                  </svg>
+              <div className="mission-card card-2">
+                <div className="mc-icon">🏛️</div>
+                <div className="mc-content">
+                  <div className="mc-bar" style={{ width: '70%' }}></div>
+                  <div className="mc-bar" style={{ width: '40%' }}></div>
                 </div>
-                <h4>{t.mapTitle}</h4>
-                <p>{t.mapDesc}</p>
               </div>
-              <div className="feature-card" style={{ '--delay': '200ms' }}>
-                <div className="feature-icon">
-                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/>
-                    <path d="M18 14h-8"/>
-                    <path d="M15 18h-5"/>
-                    <path d="M10 6h8v4h-8V6Z"/>
-                  </svg>
-                </div>
-                <h4>{t.bilingualTitle}</h4>
-                <p>{t.bilingualDesc}</p>
+              <div className="mission-showcase">
+                <div className="gradient-glow"></div>
               </div>
             </div>
           </div>
