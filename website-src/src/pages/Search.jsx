@@ -12,6 +12,7 @@ function Search({ language }) {
   const [loading, setLoading] = useState(false)
   const [offset, setOffset] = useState(0)
   const [hasMore, setHasMore] = useState(true)
+  const [totalResults, setTotalResults] = useState(0)
 
   // Check if any advanced filters are active to default open the panel
   const hasAdvancedFilters =
@@ -108,6 +109,13 @@ function Search({ language }) {
           return [...prev, ...uniqueNewResults]
         })
 
+        if (data.total !== undefined) {
+          setTotalResults(data.total)
+        } else if (isNewSearch) {
+          // Fallback if API doesn't return total (though we just added it)
+          setTotalResults(newResults.length)
+        }
+
         setHasMore(newResults.length === LIMIT)
         setLoading(false)
       })
@@ -195,6 +203,7 @@ function Search({ language }) {
       maxYear: 'Max Year',
       all: 'All',
       results: 'results found',
+      of: 'of',
       noResults: 'No results found. Try adjusting your search.',
       loading: 'Loading...',
       advanced: 'Advanced Filters',
@@ -213,6 +222,7 @@ function Search({ language }) {
       maxYear: 'Année max',
       all: 'Tous',
       results: 'résultats trouvés',
+      of: 'de',
       noResults: 'Aucun résultat trouvé.',
       loading: 'Chargement...',
       advanced: 'Filtres avancés',
@@ -364,7 +374,7 @@ function Search({ language }) {
         </div>
 
         <div className="results-count">
-          {loading && results.length === 0 ? '' : `${results.length} ${t.results}`}
+          {loading && results.length === 0 ? '' : `${results.length} ${t.of} ${totalResults} ${t.results}`}
         </div>
 
         {results.length === 0 && !loading ? (

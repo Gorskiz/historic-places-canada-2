@@ -161,18 +161,13 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 			const maxYear = parseInt(url.searchParams.get('max_year') || '0');
 			const architect = url.searchParams.get('architect');
 
-			// Base query
-			let query = `SELECT
-						id, name, province, municipality, latitude, longitude,
-						description, recognition_type, jurisdiction, recognition_date, architect
-					FROM places
-					WHERE language = ?`;
-
+			// Base conditions
+			let whereClause = `WHERE language = ?`;
 			const params: any[] = [lang];
 
 			// Text Search
 			if (q && q.length >= 2) {
-				query += ` AND (
+				whereClause += ` AND (
 					name LIKE ?
 					OR description LIKE ?
 					OR municipality LIKE ?
@@ -184,52 +179,61 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 
 			// Apply Filters
 			if (province) {
-				query += ` AND province = ?`;
+				whereClause += ` AND province = ?`;
 				params.push(province);
 			}
 
 			if (municipality) {
-				query += ` AND municipality LIKE ?`;
+				whereClause += ` AND municipality LIKE ?`;
 				params.push(`%${municipality}%`);
 			}
 
 			if (type) {
-				query += ` AND recognition_type = ?`;
+				whereClause += ` AND recognition_type = ?`;
 				params.push(type);
 			}
 
 			if (jurisdiction) {
-				query += ` AND jurisdiction = ?`;
+				whereClause += ` AND jurisdiction = ?`;
 				params.push(jurisdiction);
 			}
 
 			if (theme) {
-				query += ` AND themes LIKE ?`;
+				whereClause += ` AND themes LIKE ?`;
 				params.push(`%${theme}%`);
 			}
 
 			if (architect) {
-				query += ` AND architect LIKE ?`;
+				whereClause += ` AND architect LIKE ?`;
 				params.push(`%${architect}%`);
 			}
 
 			if (minYear > 0) {
-				query += ` AND substr(recognition_date, 1, 4) >= ?`;
+				whereClause += ` AND substr(recognition_date, 1, 4) >= ?`;
 				params.push(minYear.toString());
 			}
 
 			if (maxYear > 0) {
-				query += ` AND substr(recognition_date, 1, 4) <= ?`;
+				whereClause += ` AND substr(recognition_date, 1, 4) <= ?`;
 				params.push(maxYear.toString());
 			}
 
-			// Sort and Limit
-			query += ` ORDER BY name LIMIT ? OFFSET ?`;
-			params.push(limit, offset);
+			// Get Total Count
+			const countResult = await env.DB.prepare(`SELECT COUNT(*) as total FROM places ${whereClause}`).bind(...params).first();
+			const total = countResult?.total || 0;
 
-			const { results } = await env.DB.prepare(query).bind(...params).all();
+			// Get Data
+			const query = `SELECT
+						id, name, province, municipality, latitude, longitude,
+						description, recognition_type, jurisdiction, recognition_date, architect
+					FROM places
+					${whereClause}
+					ORDER BY name LIMIT ? OFFSET ?`;
 
-			return jsonResponse({ results, count: results.length });
+			const dataParams = [...params, limit, offset];
+			const { results } = await env.DB.prepare(query).bind(...dataParams).all();
+
+			return jsonResponse({ results, count: results.length, total });
 		}
 
 		// GET /api/filters - Get options for filters
