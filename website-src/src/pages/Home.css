@@ -1066,10 +1066,30 @@
   transform: translateY(0);
 }
 
+.section-cta {
+  background: linear-gradient(135deg, #dc143c 0%, #a00020 50%, #66141f 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.section-cta::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 40%);
+  pointer-events: none;
+}
+
 .section-cta h3 {
   font-size: clamp(2rem, 4vw, 3rem);
   margin-bottom: 1.5rem;
   color: white;
+  position: relative;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .cta-description {
@@ -1078,15 +1098,19 @@
   max-width: 700px;
   margin: 0 auto 2.5rem;
   opacity: 0.95;
+  color: rgba(255, 255, 255, 0.9);
+  position: relative;
 }
 
 .section-cta .cta-button {
   background: white;
   color: var(--red);
+  position: relative;
 }
 
 .section-cta .cta-button:hover {
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  transform: translateY(-4px);
 }
 
 @media (max-width: 768px) {
