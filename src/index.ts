@@ -160,6 +160,7 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 			const minYear = parseInt(url.searchParams.get('min_year') || '0');
 			const maxYear = parseInt(url.searchParams.get('max_year') || '0');
 			const architect = url.searchParams.get('architect');
+			const sort = url.searchParams.get('sort') || 'name_asc';
 
 			// Base conditions
 			let whereClause = `WHERE language = ?`;
@@ -218,6 +219,27 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 				params.push(maxYear.toString());
 			}
 
+			// Determine Sort Order
+			let orderBy = 'ORDER BY name ASC';
+			switch (sort) {
+				case 'newest':
+					orderBy = 'ORDER BY recognition_date DESC, name ASC';
+					break;
+				case 'oldest':
+					orderBy = 'ORDER BY recognition_date ASC, name ASC';
+					break;
+				case 'name_desc':
+					orderBy = 'ORDER BY name DESC';
+					break;
+				case 'random':
+					orderBy = 'ORDER BY RANDOM()';
+					break;
+				case 'name_asc':
+				default:
+					orderBy = 'ORDER BY name ASC';
+					break;
+			}
+
 			// Get Total Count
 			const countResult = await env.DB.prepare(`SELECT COUNT(*) as total FROM places ${whereClause}`).bind(...params).first();
 			const total = countResult?.total || 0;
@@ -228,7 +250,7 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 						description, recognition_type, jurisdiction, recognition_date, architect
 					FROM places
 					${whereClause}
-					ORDER BY name LIMIT ? OFFSET ?`;
+					${orderBy} LIMIT ? OFFSET ?`;
 
 			const dataParams = [...params, limit, offset];
 			const { results } = await env.DB.prepare(query).bind(...dataParams).all();

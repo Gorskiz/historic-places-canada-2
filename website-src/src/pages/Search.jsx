@@ -36,7 +36,8 @@ function Search({ language }) {
     theme: searchParams.get('theme') || '',
     architect: searchParams.get('architect') || '',
     min_year: searchParams.get('min_year') || '',
-    max_year: searchParams.get('max_year') || ''
+    max_year: searchParams.get('max_year') || '',
+    sort: searchParams.get('sort') || 'name_asc'
   })
 
   // Options State
@@ -182,7 +183,8 @@ function Search({ language }) {
       theme: '',
       architect: '',
       min_year: '',
-      max_year: ''
+      max_year: '',
+      sort: 'name_asc'
     })
     setSearchTerm('')
     setOffset(0)
@@ -207,7 +209,15 @@ function Search({ language }) {
       noResults: 'No results found. Try adjusting your search.',
       loading: 'Loading...',
       advanced: 'Advanced Filters',
-      clear: 'Clear All'
+      clear: 'Clear All',
+      sortBy: 'Sort by',
+      sortOptions: {
+        name_asc: 'Name (A-Z)',
+        name_desc: 'Name (Z-A)',
+        newest: 'Newest Recognition',
+        oldest: 'Oldest Recognition',
+        random: 'Random'
+      }
     },
     fr: {
       title: 'Rechercher des lieux patrimoniaux',
@@ -226,7 +236,15 @@ function Search({ language }) {
       noResults: 'Aucun résultat trouvé.',
       loading: 'Chargement...',
       advanced: 'Filtres avancés',
-      clear: 'Effacer tout'
+      clear: 'Effacer tout',
+      sortBy: 'Trier par',
+      sortOptions: {
+        name_asc: 'Nom (A-Z)',
+        name_desc: 'Nom (Z-A)',
+        newest: 'Reconnaissance (Récent)',
+        oldest: 'Reconnaissance (Ancien)',
+        random: 'Aléatoire'
+      }
     }
   }
 
@@ -373,8 +391,25 @@ function Search({ language }) {
           </div>
         </div>
 
-        <div className="results-count">
-          {loading && results.length === 0 ? '' : `${results.length} ${t.of} ${totalResults} ${t.results}`}
+        <div className="search-header-row">
+          <div className="results-count">
+            {loading && results.length === 0 ? '' : `${results.length} ${t.of} ${totalResults} ${t.results}`}
+          </div>
+
+          <div className="sort-controls">
+            <label>{t.sortBy}:</label>
+            <select
+              value={filters.sort}
+              onChange={(e) => handleFilterChange('sort', e.target.value)}
+              className="sort-select"
+            >
+              <option value="name_asc">{t.sortOptions.name_asc}</option>
+              <option value="name_desc">{t.sortOptions.name_desc}</option>
+              <option value="newest">{t.sortOptions.newest}</option>
+              <option value="oldest">{t.sortOptions.oldest}</option>
+              <option value="random">{t.sortOptions.random}</option>
+            </select>
+          </div>
         </div>
 
         {results.length === 0 && !loading ? (
