@@ -6,39 +6,111 @@ import './Search.css'
 function Search({ language }) {
   const [searchParams, setSearchParams] = useSearchParams()
 
-  // Initialize state from URL params
-  const [searchTerm, setSearchTerm] = useState(searchParams.get('q') || '')
+  // Helper to retrieve saved state
+  const getSavedState = () => {
+    try {
+      const saved = localStorage.getItem('historic_search_state')
+      return saved ? JSON.parse(saved) : null
+    } catch (e) {
+      console.error('Error parsing saved search state', e)
+      return null
+    }
+  }
+
+  // Initialize state from URL params OR localStorage
+  const [searchTerm, setSearchTerm] = useState(() => {
+    if (searchParams.has('q')) return searchParams.get('q') || ''
+
+    // If URL is empty of params, try to restore
+    const hasParams = Array.from(searchParams.keys()).length > 0
+    if (!hasParams) {
+      const saved = getSavedState()
+      if (saved?.searchTerm) return saved.searchTerm
+    }
+    return ''
+  })
+
   const [results, setResults] = useState([])
   const [loading, setLoading] = useState(false)
   const [offset, setOffset] = useState(0)
   const [hasMore, setHasMore] = useState(true)
   const [totalResults, setTotalResults] = useState(0)
 
-  // Check if any advanced filters are active to default open the panel
-  const hasAdvancedFilters =
-    searchParams.get('province') ||
-    searchParams.get('municipality') ||
-    searchParams.get('type') ||
-    searchParams.get('jurisdiction') ||
-    searchParams.get('theme') ||
-    searchParams.get('architect') ||
-    searchParams.get('min_year') ||
-    searchParams.get('max_year');
-
-  const [showAdvanced, setShowAdvanced] = useState(!!hasAdvancedFilters)
-
   // Filters State
-  const [filters, setFilters] = useState({
-    province: searchParams.get('province') || '',
-    municipality: searchParams.get('municipality') || '',
-    type: searchParams.get('type') || '',
-    jurisdiction: searchParams.get('jurisdiction') || '',
-    theme: searchParams.get('theme') || '',
-    architect: searchParams.get('architect') || '',
-    min_year: searchParams.get('min_year') || '',
-    max_year: searchParams.get('max_year') || '',
-    sort: searchParams.get('sort') || 'name_asc'
+  const [filters, setFilters] = useState(() => {
+    const defaultFilters = {
+      province: '',
+      municipality: '',
+      type: '',
+      jurisdiction: '',
+      theme: '',
+      architect: '',
+      min_year: '',
+      max_year: '',
+      sort: 'name_asc'
+    }
+
+    // Check URL first
+    let hasUrlFilter = false
+    const urlFilters = { ...defaultFilters }
+
+    Object.keys(defaultFilters).forEach(key => {
+      const val = searchParams.get(key)
+      if (val !== null) {
+        urlFilters[key] = val
+        hasUrlFilter = true
+      }
+    })
+
+    if (hasUrlFilter) return urlFilters
+
+    // If no URL filters and no params, check storage
+    const hasParams = Array.from(searchParams.keys()).length > 0
+    if (!hasParams) {
+      const saved = getSavedState()
+      if (saved?.filters) {
+        return { ...defaultFilters, ...saved.filters }
+      }
+    }
+
+    return defaultFilters
   })
+
+  // Initialize showAdvanced based on current filters (whether from URL or storage)
+  const [showAdvanced, setShowAdvanced] = useState(() => {
+    const activeFilters = [
+      filters.province,
+      filters.municipality,
+      filters.type,
+      filters.jurisdiction,
+      filters.theme,
+      filters.architect,
+      filters.min_year,
+      filters.max_year
+    ]
+
+    // Check if any filter is truthy
+    if (activeFilters.some(val => val)) return true
+
+    // Or check saved preference
+    const saved = getSavedState()
+    const hasParams = Array.from(searchParams.keys()).length > 0
+    if (saved?.showAdvanced !== undefined && !hasParams) {
+      return saved.showAdvanced
+    }
+
+    return false
+  })
+
+  // Persist state to localStorage
+  useEffect(() => {
+    const stateToSave = {
+      searchTerm,
+      filters,
+      showAdvanced
+    }
+    localStorage.setItem('historic_search_state', JSON.stringify(stateToSave))
+  }, [searchTerm, filters, showAdvanced])
 
   // Options State
   const [options, setOptions] = useState({
