@@ -95,3 +95,13 @@
     font-size: 1.5rem;
   }
 }
+
+.license-link {
+  color: var(--red);
+  text-decoration: underline;
+  transition: opacity 0.2s;
+}
+
+.license-link:hover {
+  opacity: 0.8;
+}
