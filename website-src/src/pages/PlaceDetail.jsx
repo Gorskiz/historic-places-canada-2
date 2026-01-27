@@ -9,6 +9,7 @@ function PlaceDetail({ language }) {
   const [place, setPlace] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [expandedImage, setExpandedImage] = useState(null)
 
   useEffect(() => {
     const url = `${config.endpoints.place(id)}?lang=${language}`;
@@ -40,7 +41,9 @@ function PlaceDetail({ language }) {
       recognition: 'Recognition',
       location: 'Location',
       images: 'Images',
-      coordinates: 'Coordinates'
+      coordinates: 'Coordinates',
+      download: 'Download',
+      downloadAll: 'Download All'
     },
     fr: {
       loading: 'Chargement...',
@@ -52,7 +55,9 @@ function PlaceDetail({ language }) {
       recognition: 'Reconnaissance',
       location: 'Emplacement',
       images: 'Images',
-      coordinates: 'Coordonnées'
+      coordinates: 'Coordonnées',
+      download: 'Télécharger',
+      downloadAll: 'Tout télécharger'
     }
   }
 
@@ -93,6 +98,40 @@ function PlaceDetail({ language }) {
       !url.includes('icon')
   })
 
+  const downloadImage = async (img) => {
+    try {
+      const url = img.r2_url || img.url
+      // detailed filename generation
+      const extension = url.split('.').pop().split(/[?#]/)[0] || 'jpg'
+      const sanitizedName = place.name.replace(/[^a-z0-9]/gi, '_').toLowerCase().replace(/_+/g, '_')
+      const filename = `${sanitizedName}_${images.indexOf(img) + 1}.${extension}`
+      const response = await fetch(url)
+      const blob = await response.blob()
+      const blobUrl = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.style.display = 'none'
+      a.href = blobUrl
+      a.download = filename
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(blobUrl)
+      document.body.removeChild(a)
+    } catch (err) {
+      console.error('Error downloading image:', err)
+    }
+  }
+
+  const downloadAllImages = async () => {
+    for (let i = 0; i < images.length; i++) {
+      await downloadImage(images[i])
+      await new Promise(resolve => setTimeout(resolve, 500)) // Slight delay to prevent browser blocking
+    }
+  }
+
+  const galleryClass = images.length === 1 ? 'gallery-single' :
+    images.length === 2 ? 'gallery-double' :
+      'gallery-multi'
+
   return (
     <div className="place-detail">
       <div className="container">
@@ -101,15 +140,37 @@ function PlaceDetail({ language }) {
         <h1>{place.name}</h1>
 
         {images.length > 0 && (
-          <div className="images-gallery">
-            {images.slice(0, 3).map((img, idx) => (
+          <div className={`images-gallery ${galleryClass}`}>
+            {images.map((img, idx) => (
               <img
                 key={idx}
                 src={img.r2_url || img.url}
                 alt={img.alt || place.name}
                 className="place-image"
+                onClick={() => setExpandedImage(img)}
               />
             ))}
+          </div>
+        )}
+
+        {expandedImage && (
+          <div className="image-overlay" onClick={() => setExpandedImage(null)}>
+            <button className="close-btn" onClick={() => setExpandedImage(null)}>&times;</button>
+            <div className="overlay-content" onClick={e => e.stopPropagation()}>
+              <img
+                src={expandedImage.r2_url || expandedImage.url}
+                alt={expandedImage.alt || place.name}
+                className="expanded-image"
+              />
+              <div className="overlay-controls">
+                <button className="overlay-btn" onClick={() => downloadImage(expandedImage)}>
+                  {t.download}
+                </button>
+                <button className="overlay-btn" onClick={downloadAllImages}>
+                  {t.downloadAll} ({images.length})
+                </button>
+              </div>
+            </div>
           </div>
         )}
 

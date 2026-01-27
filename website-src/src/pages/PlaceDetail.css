@@ -112,6 +112,138 @@
   }
 
   .images-gallery {
-    grid-template-columns: 1fr;
+    /* On mobile, stack them or just keep flex/grid behavior */
+    flex-direction: column;
   }
+
+  .place-image {
+    width: 100%;
+    height: auto;
+    max-height: 400px;
+  }
+}
+
+/* Expanded View Overlay */
+.image-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  /* Click to close */
+}
+
+.overlay-content {
+  position: relative;
+  max-width: 90vw;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: default;
+  /* Don't close when clicking content */
+}
+
+.expanded-image {
+  max-width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 4px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.overlay-controls {
+  margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.overlay-btn {
+  background: white;
+  color: var(--gray-900);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  text-decoration: none;
+  /* In case we use 'a' tags */
+  font-size: 0.9rem;
+}
+
+.overlay-btn:hover {
+  opacity: 0.9;
+}
+
+.close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+  z-index: 1010;
+  padding: 0.5rem;
+  line-height: 1;
+}
+
+/* Modified Gallery Styles */
+.images-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+/* Base style for images in the gallery */
+.place-image {
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  object-fit: cover;
+  /* Default backup */
+  display: block;
+}
+
+.place-image:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Dynamic handling based on classes we will apply in JS */
+.gallery-single {
+  justify-content: center;
+}
+
+.gallery-single .place-image {
+  width: auto;
+  max-width: 100%;
+  max-height: 600px;
+  object-fit: contain;
+  background: var(--gray-50);
+}
+
+.gallery-double .place-image {
+  width: calc(50% - 0.5rem);
+  height: 400px;
+  object-fit: cover;
+}
+
+.gallery-multi .place-image {
+  flex: 1 1 300px;
+  /* Grow, Shrink, Basis */
+  height: 250px;
+  object-fit: cover;
+  max-width: 100%;
 }
