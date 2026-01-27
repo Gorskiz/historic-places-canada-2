@@ -42,7 +42,8 @@ function Search({ language }) {
   const [options, setOptions] = useState({
     provinces: [],
     types: [],
-    jurisdictions: []
+    jurisdictions: [],
+    themes: []
   })
 
   const observer = useRef()
@@ -57,7 +58,8 @@ function Search({ language }) {
         setOptions({
           provinces: data.provinces || [],
           types: data.types || [],
-          jurisdictions: data.jurisdictions || []
+          jurisdictions: data.jurisdictions || [],
+          themes: data.themes || []
         })
       })
       .catch(err => {
@@ -306,13 +308,16 @@ function Search({ language }) {
               {/* Theme */}
               <div className="filter-group">
                 <label>{t.theme}</label>
-                <input
-                  type="text"
+                <select
                   value={filters.theme}
                   onChange={(e) => handleFilterChange('theme', e.target.value)}
-                  className="filter-input"
-                  placeholder={t.theme}
-                />
+                  className="filter-select"
+                >
+                  <option value="">{t.all}</option>
+                  {options.themes?.map(t => (
+                    <option key={t.theme} value={t.theme}>{t.theme} ({t.count})</option>
+                  ))}
+                </select>
               </div>
 
               {/* Architect */}

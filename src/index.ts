@@ -266,7 +266,6 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 				WHERE language = ? AND themes IS NOT NULL AND themes != ''
 				GROUP BY theme
 				ORDER BY count DESC
-				LIMIT 12
 			`).bind(lang).all();
 
 			return jsonResponse({
