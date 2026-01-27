@@ -174,7 +174,11 @@ function Home({ language }) {
       openSourceTitle: 'Open Source',
       openSourceDesc: 'Built by the community, for the community.',
       dataTitle: 'Open Data',
-      dataDesc: 'All data is available for research and education.'
+      dataDesc: 'All data is available for research and education.',
+      total: 'Total Places',
+      images: 'Total Images',
+      provinces: 'Provinces',
+      themes: 'Themes'
     },
     fr: {
       hero: 'Préserver le patrimoine canadien',
@@ -206,7 +210,11 @@ function Home({ language }) {
       openSourceTitle: 'Open Source',
       openSourceDesc: 'Construit par la communauté, pour la communauté.',
       dataTitle: 'Données ouvertes',
-      dataDesc: 'Toutes les données sont disponibles pour la recherche.'
+      dataDesc: 'Toutes les données sont disponibles pour la recherche.',
+      total: 'Lieux au total',
+      images: 'Images au total',
+      provinces: 'Provinces',
+      themes: 'Thèmes'
     }
   }
 
