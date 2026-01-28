@@ -12,7 +12,7 @@ This is a full-stack preservation platform that serves:
 
 1.  **A Modern Web Application**: A lightning-fast, responsive SPA (Single Page Application) that makes exploring history a premium experience.
 2.  **A Public API**: A robust backend that powers the site and provides open access to the data for researchers and developers.
-3.  **The Complete Dataset**: We've cleaned and indexed the original data, including descriptions, architectural details, and images.
+3.  **The Complete Dataset**: We've cleaned and indexed the original data, including descriptions, architectural details, and over **22,000+** images.
 
 **[Explore the Live Site](https://historicplaces2.ca/)**
 
@@ -20,7 +20,7 @@ This is a full-stack preservation platform that serves:
 
 We've implemented features that modern users expect:
 
-*   **🔍 Advanced Search**: Filter 10,000+ places by **Architect**, **Year of Construction**, **Theme**, **Municipality**, and more. No more clunky government forms.
+*   **🔍 Advanced Search**: Filter 11,000+ places by **Architect**, **Year of Construction**, **Theme**, **Municipality**, and more. No more clunky government forms.
 *   **🗺️ Interactive Map**: visualize historic sites across all 13 provinces and territories on a performant, clustering map.
 *   **🗣️ Fully Bilingual**: Native support for **English** and **French**, just like the original, but faster.
 *   **📱 Mobile First**: A responsive design that looks great on your phone, tablet, or desktop.
@@ -75,7 +75,15 @@ This is a **community-led** project. We need your help to keep it alive and grow
 
 ## 📜 License
 
-This project is open source. Data originally sourced from the Canadian Register of Historic Places. (https://www.historicplaces.ca/)
+### Code
+
+The code in this repository is released under the MIT License. Feel free to use, modify, and distribute.
+
+### Data
+
+The original data is from Parks Canada and the Canadian Register of Historic Places. This project preserves and provides access to public heritage data.
+
+This project utilizes data from the Canadian Register of Historic Places (historicplaces.ca), provided by the Government of Canada. This data is available under the [Open Government Licence - Canada](https://open.canada.ca/en/open-government-licence-canada).
 
 ---
 *Preserving the past, building for the future.*
