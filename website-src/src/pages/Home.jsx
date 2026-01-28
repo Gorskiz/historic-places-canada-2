@@ -178,7 +178,7 @@ function Home({ language }) {
       dataDesc: 'All data is available for research and education.',
       total: 'Total Places',
       images: 'Total Images',
-      provinces: 'Provinces',
+      provinces: 'Jurisdictions',
       themes: 'Themes'
     },
     fr: {
@@ -214,7 +214,7 @@ function Home({ language }) {
       dataDesc: 'Toutes les données sont disponibles pour la recherche.',
       total: 'Lieux au total',
       images: 'Images au total',
-      provinces: 'Provinces',
+      provinces: 'Juridictions',
       themes: 'Thèmes'
     }
   }
