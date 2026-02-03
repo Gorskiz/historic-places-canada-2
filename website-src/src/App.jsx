@@ -85,8 +85,8 @@ function App() {
           <div className="container">
             <p>
               {language === 'en'
-                ? 'Open source community preservation project - Data from Parks Canada'
-                : 'Projet communautaire de préservation open source - Données de Parcs Canada'}
+                ? 'Open source community preservation project - Data from the Canadian Register of Historic Places'
+                : 'Projet communautaire de préservation open source - Données du Registre canadien des lieux patrimoniaux'}
             </p>
             <p className="footer-links">
               <Link to="/docs" className="footer-link">

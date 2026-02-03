@@ -147,7 +147,7 @@ function ApiDocs({ language }) {
   const text = {
     en: {
       title: 'API Documentation',
-      subtitle: 'Free, open-access API for Canadian historic places data',
+      subtitle: 'API for educational and research use — Canadian historic places data',
 
       // Tabs
       overviewTab: 'Overview',
@@ -182,9 +182,15 @@ function ApiDocs({ language }) {
       bilingualText: 'All content is available in both English and French. Use the lang parameter in your requests:',
       bilingualExample: 'Add ?lang=en or ?lang=fr to any endpoint',
 
-      attribution: 'Data Attribution',
-      attributionText: 'This data is sourced from Parks Canada\'s Historic Places database. Please include proper attribution:',
-      attributionQuote: 'Data from Historic Places Canada, Parks Canada',
+      usageTermsTitle: 'Usage Terms',
+      usageTermsIntro: 'By using this API or any data it provides, you agree to the following terms. Failure to comply may result in access being revoked.',
+      usageTermsPoints: [
+        { title: 'Educational and Research Use Only', text: 'This API and its data may only be used for educational, academic, journalistic, or non-commercial research purposes.' },
+        { title: 'No Commercial Use', text: 'You may not use the data, or any work derived from the data, for any commercial purpose, including selling, advertising, or monetising access to the data in any form.' },
+        { title: 'Attribution Required', text: 'All uses of this data must include clear attribution to the Canadian Register of Historic Places as the original source.' }
+      ],
+      usageTermsAttribution: 'Required attribution:',
+      usageTermsAttributionQuote: 'Data sourced from the Canadian Register of Historic Places (historicplaces.ca), Government of Canada.',
 
       // Examples content
       example1Title: 'Example 1: Fetch Places by Province',
@@ -236,7 +242,7 @@ function ApiDocs({ language }) {
     },
     fr: {
       title: 'Documentation API',
-      subtitle: 'API gratuite et en libre accès pour les données des lieux patrimoniaux canadiens',
+      subtitle: 'API pour usage éducatif et de recherche — données des lieux patrimoniaux canadiens',
 
       // Tabs
       overviewTab: 'Aperçu',
@@ -271,9 +277,15 @@ function ApiDocs({ language }) {
       bilingualText: 'Tout le contenu est disponible en anglais et en français. Utilisez le paramètre lang dans vos requêtes:',
       bilingualExample: 'Ajoutez ?lang=en ou ?lang=fr à n\'importe quel point de terminaison',
 
-      attribution: 'Attribution des Données',
-      attributionText: 'Ces données proviennent de la base de données des lieux patrimoniaux de Parcs Canada. Veuillez inclure une attribution appropriée:',
-      attributionQuote: 'Données de Lieux Patrimoniaux du Canada, Parcs Canada',
+      usageTermsTitle: 'Conditions d\'utilisation',
+      usageTermsIntro: 'En utilisant cette API ou les données qu\'elle fournit, vous acceptez les conditions suivantes. Le non-respect de ces conditions peut entraîner la révocation de votre accès.',
+      usageTermsPoints: [
+        { title: 'Usage éducatif et de recherche uniquement', text: 'Cette API et ses données ne peuvent être utilisées qu\'à des fins éducatives, académiques, journalistiques ou de recherche non commerciale.' },
+        { title: 'Pas d\'usage commercial', text: 'Vous ne pouvez pas utiliser les données, ni tout travail dérivé de ces données, à des fins commerciales, notamment la vente, la publicité ou la monétisation de l\'accès aux données sous quelque forme que ce soit.' },
+        { title: 'Attribution requise', text: 'Tout usage de ces données doit inclure une attribution claire au Registre canadien des lieux patrimoniaux comme source originale.' }
+      ],
+      usageTermsAttribution: 'Attribution requise :',
+      usageTermsAttributionQuote: 'Données provenant du Registre canadien des lieux patrimoniaux (historicplaces.ca), Gouvernement du Canada.',
 
       // Examples content
       example1Title: 'Exemple 1: Récupérer des Lieux par Province',
@@ -515,6 +527,25 @@ print(data['places'])`,
       <div className="api-docs-content container">
         {activeTab === 'overview' && (
           <div className="overview-tab">
+            <div className="terms-card">
+              <div className="terms-card-header">
+                <div className="terms-card-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                  </svg>
+                </div>
+                <h3>{t.usageTermsTitle}</h3>
+              </div>
+              <p className="terms-card-intro">{t.usageTermsIntro}</p>
+              <ul>
+                {t.usageTermsPoints.map((point, i) => (
+                  <li key={i}><strong>{point.title}</strong> — {point.text}</li>
+                ))}
+              </ul>
+              <p className="terms-card-attribution">{t.usageTermsAttribution}</p>
+              <blockquote>{t.usageTermsAttributionQuote}</blockquote>
+            </div>
+
             <section className="doc-section">
               <h2>{t.gettingStarted}</h2>
               <p>{t.gettingStartedText}</p>
@@ -577,11 +608,6 @@ print(data['places'])`,
               </div>
             </section>
 
-            <section className="doc-section">
-              <h2>{t.attribution}</h2>
-              <p>{t.attributionText}</p>
-              <blockquote>{t.attributionQuote}</blockquote>
-            </section>
           </div>
         )}
 

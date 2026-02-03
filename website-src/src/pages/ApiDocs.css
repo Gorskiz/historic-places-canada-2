@@ -144,6 +144,112 @@
   font-family: 'Courier New', monospace;
 }
 
+/* Terms Card */
+.terms-card {
+  background: #fef2f2;
+  border: 1px solid rgba(220, 20, 60, 0.25);
+  border-left: 4px solid var(--red);
+  border-radius: 12px;
+  padding: 1.75rem 2rem;
+  margin-bottom: 2.5rem;
+}
+
+.terms-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.terms-card-icon {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  background: var(--red);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.terms-card h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--red);
+  margin: 0;
+}
+
+.terms-card-intro {
+  font-size: 0.9375rem;
+  color: #7f1d1d;
+  line-height: 1.6;
+  margin: 0 0 1rem;
+}
+
+.terms-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+}
+
+.terms-card ul li {
+  padding-left: 1.5rem;
+  margin-bottom: 0.75rem;
+  position: relative;
+  line-height: 1.6;
+  color: #7f1d1d;
+  font-size: 0.9375rem;
+}
+
+.terms-card ul li::before {
+  content: "•";
+  color: var(--red);
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+}
+
+.terms-card ul li strong {
+  color: #991b1b;
+}
+
+.terms-card-attribution {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #991b1b;
+  margin: 1rem 0 0.5rem;
+}
+
+.terms-card blockquote {
+  margin: 0;
+  padding: 0.875rem 1.25rem;
+  background: rgba(220, 20, 60, 0.08);
+  border-left: 3px solid var(--red);
+  border-radius: 0 6px 6px 0;
+  font-style: italic;
+  color: #7f1d1d;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .terms-card {
+    padding: 1.25rem 1.5rem;
+  }
+
+  .terms-card-icon {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+  }
+
+  .terms-card-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
 /* Code Blocks */
 .code-examples {
   display: grid;
