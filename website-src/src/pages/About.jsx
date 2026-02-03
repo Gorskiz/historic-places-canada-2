@@ -61,9 +61,7 @@ function About({ language }) {
       contributeText: 'Found an issue? Want to help? This is an open source project and we welcome contributions! Visit our GitHub repository to contribute code, report bugs, or suggest improvements. Together, we can preserve Canadian heritage for future generations.',
       github: 'View on GitHub',
       licensing: 'Licensing',
-      licensingText: 'This project utilizes data from the Canadian Register of Historic Places (historicplaces.ca), provided by the Government of Canada. This data is available under the ',
-      licensingLinkText: 'Open Government Licence - Canada',
-      licensingUrl: 'https://open.canada.ca/en/open-government-licence-canada',
+      licensingText: 'The data in this project is copyrighted by the Canadian Register of Historic Places. It may only be reused for educational, academic, journalistic, or non-commercial research purposes. Commercial use is not permitted. Any use of the data must include attribution to the Canadian Register of Historic Places as the original source.',
       credits: 'Credits',
       creditsText: 'Original data: Parks Canada and the Canadian Register of Historic Places. This is a preservation project created by concerned citizens who believe cultural heritage data should be accessible to all.',
       contact: 'Contact',
@@ -113,9 +111,7 @@ function About({ language }) {
       contributeText: 'Vous avez trouvé un problème? Vous voulez aider? Ceci est un projet open source et nous accueillons les contributions! Visitez notre dépôt GitHub pour contribuer du code, signaler des bogues ou suggérer des améliorations. Ensemble, nous pouvons préserver le patrimoine canadien pour les générations futures.',
       github: 'Voir sur GitHub',
       licensing: 'Licence',
-      licensingText: 'Ce projet utilise des données du Registre canadien des lieux patrimoniaux (historicplaces.ca), fournies par le gouvernement du Canada. Ces données sont disponibles sous la ',
-      licensingLinkText: 'Licence du gouvernement ouvert – Canada',
-      licensingUrl: 'https://open.canada.ca/fr/licence-du-gouvernement-ouvert-canada',
+      licensingText: 'Les données de ce projet sont sous droit d\'auteur du Registre canadien des lieux patrimoniaux. Elles ne peuvent être réutilisées que à des fins éducatives, académiques, journalistiques ou de recherche non commerciale. L\'usage commercial n\'est pas autorisé. Toute utilisation de ces données doit inclure une attribution au Registre canadien des lieux patrimoniaux comme source originale.',
       credits: 'Crédits',
       creditsText: 'Données originales: Parcs Canada et le Registre canadien des lieux patrimoniaux. Il s\'agit d\'un projet de préservation créé par des citoyens concernés qui croient que les données du patrimoine culturel devraient être accessibles à tous.',
       contact: 'Contact',
@@ -206,17 +202,7 @@ function About({ language }) {
 
         <section className="about-section">
           <h2>{t.licensing}</h2>
-          <p>
-            {t.licensingText}
-            <a
-              href={t.licensingUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="license-link"
-            >
-              {t.licensingLinkText}
-            </a>.
-          </p>
+          <p>{t.licensingText}</p>
         </section>
 
         <section className="about-section">
