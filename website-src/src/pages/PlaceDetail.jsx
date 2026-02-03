@@ -216,6 +216,7 @@ function PlaceDetail({ language }) {
                 alt={expandedImage.alt || place.name}
                 className="expanded-image"
               />
+              <p className="overlay-source">{t.disclaimerSource}</p>
               <div className="overlay-controls">
                 <button className="overlay-btn" onClick={() => downloadImage(expandedImage)}>
                   {t.download}
