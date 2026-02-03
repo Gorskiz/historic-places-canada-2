@@ -293,7 +293,7 @@ function Search({ language }) {
         random: 'Random'
       },
       noImage: 'No image available',
-      disclaimerTitle: 'Important Notice About These Records',
+      disclaimerTitle: 'Important Notice About These Records Originally From historicplaces.ca',
       disclaimerSummary: 'The records on this site may be incomplete, outdated, or contain inaccuracies.',
       disclaimerToggleOpen: 'Read full disclaimer',
       disclaimerToggleClose: 'Hide disclaimer',
@@ -332,7 +332,7 @@ function Search({ language }) {
         random: 'Aléatoire'
       },
       noImage: 'Aucune image disponible',
-      disclaimerTitle: 'Avis important concernant ces dossiers',
+      disclaimerTitle: 'Avis important concernant ces dossiers originaux de historicplaces.ca',
       disclaimerSummary: 'Les dossiers sur ce site peuvent être incomplets, obsolètes ou contenir des inexactitudes.',
       disclaimerToggleOpen: 'Lire l\'avis complet',
       disclaimerToggleClose: 'Masquer l\'avis',
