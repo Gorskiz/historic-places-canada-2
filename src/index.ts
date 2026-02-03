@@ -340,7 +340,8 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 			// Get Data
 			const query = `SELECT
 						id, name, province, municipality, latitude, longitude,
-						description, recognition_type, jurisdiction, recognition_date, architect
+						description, recognition_type, jurisdiction, recognition_date, architect,
+						(SELECT r2_url FROM images WHERE place_id = places.id ORDER BY display_order LIMIT 1) as primary_image
 					FROM places
 					${whereClause}
 					${orderBy} LIMIT ? OFFSET ?`;
