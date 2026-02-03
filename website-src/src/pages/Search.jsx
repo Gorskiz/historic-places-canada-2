@@ -6,6 +6,7 @@ import './Search.css'
 
 function Search({ language }) {
   const [searchParams, setSearchParams] = useSearchParams()
+  const [disclaimerOpen, setDisclaimerOpen] = useState(false)
 
   // Helper to retrieve saved state
   const getSavedState = () => {
@@ -290,7 +291,19 @@ function Search({ language }) {
         newest: 'Newest Recognition',
         oldest: 'Oldest Recognition',
         random: 'Random'
-      }
+      },
+      noImage: 'No image available',
+      disclaimerTitle: 'Important Notice About These Records',
+      disclaimerSummary: 'The records on this site may be incomplete, outdated, or contain inaccuracies.',
+      disclaimerToggleOpen: 'Read full disclaimer',
+      disclaimerToggleClose: 'Hide disclaimer',
+      disclaimerNotUpToDate: 'Not Up to Date',
+      disclaimerNotUpToDateText: 'The records contained on historicplaces.ca are not up to date. The site was most recently updated 15 years ago. This means that there are many sites that are registered that are not included and some of those included are no longer registered or no longer existing.',
+      disclaimerInaccurate: 'May Contain Inaccuracies',
+      disclaimerInaccurateText: 'The records contained on historicplaces.ca may have inaccurate information. 15 years is long enough for additional research to have been conducted on sites and new information has been obtained that shows older information to be false. In addition, what are presented as Character Defining Elements on the site is not always what is listed in the official document held by level of government who registered the property.',
+      disclaimerIncomplete: 'Not Complete',
+      disclaimerIncompleteText: 'The records contained on historicplaces.ca are not complete. When the information for the site was gathered each province took a different approach to what would be included. For example, in some provinces property owners were allowed to opt out of inclusion on the basis of privacy concerns, in other provinces all sites were included. This means that leaving aside the lack of updates over the last 15 years the records are far from complete.',
+      disclaimerSource: 'Source: Canadian Register of Historic Places'
     },
     fr: {
       title: 'Rechercher des lieux patrimoniaux',
@@ -317,7 +330,19 @@ function Search({ language }) {
         newest: 'Reconnaissance (Récent)',
         oldest: 'Reconnaissance (Ancien)',
         random: 'Aléatoire'
-      }
+      },
+      noImage: 'Aucune image disponible',
+      disclaimerTitle: 'Avis important concernant ces dossiers',
+      disclaimerSummary: 'Les dossiers sur ce site peuvent être incomplets, obsolètes ou contenir des inexactitudes.',
+      disclaimerToggleOpen: 'Lire l\'avis complet',
+      disclaimerToggleClose: 'Masquer l\'avis',
+      disclaimerNotUpToDate: 'Pas à jour',
+      disclaimerNotUpToDateText: 'Les dossiers contenus sur historicplaces.ca ne sont pas à jour. Le site a été mis à jour pour la dernière fois il y a 15 ans. Cela signifie qu\'il existe de nombreux sites enregistrés qui ne sont pas inclus et certains de ceux qui sont inclus ne sont plus enregistrés ou n\'existent plus.',
+      disclaimerInaccurate: 'Peut contenir des inexactitudes',
+      disclaimerInaccurateText: 'Les dossiers contenus sur historicplaces.ca peuvent contenir des informations inexactes. 15 ans est suffisant pour que des recherches supplémentaires aient été effectuées sur les sites et que de nouvelles informations aient été obtenues montrant que les anciennes informations sont fausses. De plus, ce qui est présenté comme des Éléments caractéristiques sur le site n\'est pas toujours ce qui est indiqué dans le document officiel détenu par le niveau de gouvernement qui a enregistré la propriété.',
+      disclaimerIncomplete: 'Pas complet',
+      disclaimerIncompleteText: 'Les dossiers contenus sur historicplaces.ca ne sont pas complets. Lorsque les informations pour le site ont été recueillies, chaque province a adopté une approche différente concernant ce qui serait inclus. Par exemple, dans certaines provinces, les propriétaires avaient le droit de se retirer de l\'inclusion pour des raisons de confidentialité, dans d\'autres provinces, tous les sites étaient inclus. Cela signifie que, au-delà du manque de mises à jour au cours des 15 dernières années, les dossiers sont loin d\'être complets.',
+      disclaimerSource: 'Source : Registre canadien des lieux patrimoniaux'
     }
   }
 
@@ -471,6 +496,48 @@ function Search({ language }) {
           </div>
         </div>
 
+        {/* Data Disclaimer */}
+        <div className="search-disclaimer">
+          <div className="disclaimer-card">
+            <div className="disclaimer-header">
+              <div className="disclaimer-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+              </div>
+              <div className="disclaimer-text-block">
+                <h4 className="disclaimer-title">{t.disclaimerTitle}</h4>
+                <p className="disclaimer-summary">{t.disclaimerSummary}</p>
+              </div>
+            </div>
+            <button className="disclaimer-toggle" onClick={() => setDisclaimerOpen(prev => !prev)}>
+              <span>{disclaimerOpen ? t.disclaimerToggleClose : t.disclaimerToggleOpen}</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={disclaimerOpen ? 'chevron-up' : ''}>
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            {disclaimerOpen && (
+              <div className="disclaimer-details">
+                <div className="disclaimer-item">
+                  <p className="disclaimer-item-title">{t.disclaimerNotUpToDate}</p>
+                  <p>{t.disclaimerNotUpToDateText}</p>
+                </div>
+                <div className="disclaimer-item">
+                  <p className="disclaimer-item-title">{t.disclaimerInaccurate}</p>
+                  <p>{t.disclaimerInaccurateText}</p>
+                </div>
+                <div className="disclaimer-item">
+                  <p className="disclaimer-item-title">{t.disclaimerIncomplete}</p>
+                  <p>{t.disclaimerIncompleteText}</p>
+                </div>
+              </div>
+            )}
+            <p className="disclaimer-source">{t.disclaimerSource}</p>
+          </div>
+        </div>
+
         <div className="search-header-row">
           <div className="results-count">
             {loading && results.length === 0 ? '' : `${results.length} ${t.of} ${totalResults} ${t.results}`}
@@ -505,11 +572,31 @@ function Search({ language }) {
                   key={place.id}
                   className="result-card"
                 >
-                  <h3>{place.name}</h3>
-                  <p className="location">
-                    {[place.municipality, place.province].filter(Boolean).join(', ')}
-                  </p>
-                  {place.recognition_type && <p className="type">{place.recognition_type}</p>}
+                  <div className="result-card-image">
+                    {place.primary_image ? (
+                      <img
+                        src={place.primary_image}
+                        alt={place.name}
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="no-image-placeholder">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                          <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                          <polyline points="21 15 16 10 5 21"></polyline>
+                        </svg>
+                        <span>{t.noImage}</span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="result-card-content">
+                    <h3>{place.name}</h3>
+                    <p className="location">
+                      {[place.municipality, place.province].filter(Boolean).join(', ')}
+                    </p>
+                    {place.recognition_type && <p className="type">{place.recognition_type}</p>}
+                  </div>
                 </Link>
               )
             })}
