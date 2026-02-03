@@ -163,9 +163,10 @@ function ApiDocs({ language }) {
       quickStartTitle: 'Fetch 10 places from Ontario',
 
       rateLimit: 'Rate Limiting',
-      rateLimitText: 'To ensure fair usage and API stability, we implement rate limiting for all requests:',
+      rateLimitText: 'Because this data is licensed for non-commercial, educational use only, strict rate limits are in place to prevent bulk harvesting:',
       rateLimitPoints: [
-        'Anonymous users: 100 requests per minute per IP address',
+        'General endpoints (stats, provinces, filters, individual places): 30 requests per minute per IP',
+        'Data endpoints (search, place listings, map): 10 requests per minute per IP',
         'Rate limit headers included in all responses',
         'Requests exceeding the limit receive a 429 status code',
         'Retry-After header indicates when to retry'
@@ -258,9 +259,10 @@ function ApiDocs({ language }) {
       quickStartTitle: 'Récupérer 10 lieux de l\'Ontario',
 
       rateLimit: 'Limitation de Débit',
-      rateLimitText: 'Pour garantir une utilisation équitable et la stabilité de l\'API, nous mettons en œuvre une limitation de débit pour toutes les requêtes:',
+      rateLimitText: 'Ces données sont sous licence pour un usage non commercial et éducatif uniquement. Des limites strictes sont en vigueur pour empêcher le téléchargement massif:',
       rateLimitPoints: [
-        'Utilisateurs anonymes: 100 requêtes par minute par adresse IP',
+        'Points de terminaison généraux (statistiques, provinces, filtres, lieux individuels): 30 requêtes par minute par adresse IP',
+        'Points de terminaison de données (recherche, liste de lieux, carte): 10 requêtes par minute par adresse IP',
         'En-têtes de limitation inclus dans toutes les réponses',
         'Les requêtes dépassant la limite reçoivent un code d\'état 429',
         'L\'en-tête Retry-After indique quand réessayer'
