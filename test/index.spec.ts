@@ -45,10 +45,17 @@ describe('Canadian Historic Places API', () => {
 		expect(response.headers.get('Content-Type')).toContain('text/html');
 	});
 
-	it('Rate limiter headers are present', async () => {
+	it('Rate limiter headers are present with global limit on non-data endpoint', async () => {
 		const request = new Request('http://example.com/api/provinces');
 		const response = await SELF.fetch(request);
-		expect(response.headers.has('X-RateLimit-Limit')).toBe(true);
-		expect(response.headers.has('X-RateLimit-Remaining')).toBe(true);
+		expect(response.headers.get('X-RateLimit-Limit')).toBe('30');
+		expect(response.headers.get('X-RateLimit-Remaining')).toBe('29');
+	});
+
+	it('Data endpoints report the tighter per-endpoint rate limit', async () => {
+		const request = new Request('http://example.com/api/search?q=test');
+		const response = await SELF.fetch(request);
+		expect(response.headers.get('X-RateLimit-Limit')).toBe('10');
+		expect(response.headers.get('X-RateLimit-Remaining')).toBe('9');
 	});
 });

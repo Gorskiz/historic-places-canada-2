@@ -3,13 +3,13 @@
   "info": {
     "title": "Historic Places Canada API",
     "version": "1.0.0",
-    "description": "# Historic Places Canada Open Data API\n\nA free, open-access API providing comprehensive data about Canada's nationally recognized historic places. This API includes information about over 11,000 historic sites across Canada with geographic coordinates, images, descriptions, and metadata.\n\n## Features\n- **Bilingual Support**: All content available in English and French (use `lang` parameter)\n- **Rich Metadata**: Includes recognition dates, architectural styles, themes, and more\n- **Geographic Data**: Latitude/longitude coordinates for mapping\n- **Images**: High-quality historic photographs via R2 storage\n- **Full-Text Search**: Search across names, descriptions, architects, and more\n- **Advanced Filters**: Filter by province, type, theme, date range, and more\n\n## Rate Limiting\n- **Anonymous Users**: 100 requests per minute per IP address\n- Rate limit headers included in all responses:\n  - `X-RateLimit-Limit`: Maximum requests per window\n  - `X-RateLimit-Remaining`: Requests remaining in current window\n  - `X-RateLimit-Reset`: Unix timestamp when the limit resets\n- When limit exceeded, returns `429 Too Many Requests` with `Retry-After` header\n\n## Data Attribution\nData sourced from Parks Canada's Historic Places database. Please attribute:\n> \"Data from Historic Places Canada, Parks Canada\"\n\n## Support\nFor issues or questions, visit: https://github.com/Gorskiz/historic-places-canada-2\n",
+    "description": "# Historic Places Canada Open Data API\n\nA free, open-access API providing comprehensive data about Canada's nationally recognized historic places. This API includes information about over 11,000 historic sites across Canada with geographic coordinates, images, descriptions, and metadata.\n\n## Features\n- **Bilingual Support**: All content available in English and French (use `lang` parameter)\n- **Rich Metadata**: Includes recognition dates, architectural styles, themes, and more\n- **Geographic Data**: Latitude/longitude coordinates for mapping\n- **Images**: High-quality historic photographs via R2 storage\n- **Full-Text Search**: Search across names, descriptions, architects, and more\n- **Advanced Filters**: Filter by province, type, theme, date range, and more\n\n## Usage Policy\nThis data is licensed for **non-commercial, educational use only**. All uses must include attribution to the Canadian Register of Historic Places.\n\n## Rate Limiting\nStrict rate limits are enforced to protect copyrighted source data:\n- **General Endpoints** (stats, provinces, filters, individual places): 30 requests per minute per IP\n- **Data Endpoints** (search, place listings, map): 10 requests per minute per IP\n- Rate limit headers included in all responses:\n  - `X-RateLimit-Limit`: Maximum requests per window for the endpoint tier\n  - `X-RateLimit-Remaining`: Requests remaining in current window\n  - `X-RateLimit-Reset`: Unix timestamp when the limit resets\n- When limit exceeded, returns `429 Too Many Requests` with `Retry-After` header\n\n## Data Attribution\nData sourced from the Canadian Register of Historic Places (historicplaces.ca), Government of Canada. Please attribute:\n> \"Data sourced from the Canadian Register of Historic Places (historicplaces.ca), Government of Canada.\"\n\n## Support\nFor issues or questions, visit: https://github.com/Gorskiz/historic-places-canada-2\n",
     "contact": {
       "name": "API Support",
       "url": "https://historicplaces2.workers.dev"
     },
     "license": {
-      "name": "Open Data",
+      "name": "Non-Commercial, Educational Use Only",
       "url": "https://open.canada.ca/en/open-government-licence-canada"
     }
   },
@@ -102,8 +102,8 @@
             "schema": {
               "type": "integer",
               "minimum": 1,
-              "maximum": 1000,
-              "default": 100
+              "maximum": 50,
+              "default": 50
             }
           },
           {
@@ -409,7 +409,7 @@
             "schema": {
               "type": "integer",
               "minimum": 1,
-              "maximum": 1000,
+              "maximum": 50,
               "default": 50
             }
           },

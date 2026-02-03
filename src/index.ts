@@ -8,7 +8,8 @@ interface Env {
 	DB: D1Database;
 	IMAGES: R2Bucket;
 	ASSETS: Fetcher; // Assets binding for static files
-	RATE_LIMITER: RateLimit; // Rate limiting binding
+	RATE_LIMITER: RateLimit; // Global rate limit (30 req/min)
+	DATA_RATE_LIMITER: RateLimit; // Tighter limit for data endpoints (10 req/min)
 }
 
 // CORS headers for API routes
@@ -71,9 +72,13 @@ export default {
 
 /**
  * Rate Limiting Configuration
+ * Data is licensed for non-commercial, educational use only.
+ * Global limit applies to all endpoints; the tighter DATA limit
+ * applies additionally to bulk-data endpoints (search, list, map).
  */
 const RATE_LIMIT_CONFIG = {
-	REQUESTS_PER_MINUTE: 100,
+	REQUESTS_PER_MINUTE: 30,
+	DATA_REQUESTS_PER_MINUTE: 10,
 	WINDOW_SECONDS: 60,
 	HEADERS: {
 		LIMIT: 'X-RateLimit-Limit',
@@ -84,50 +89,61 @@ const RATE_LIMIT_CONFIG = {
 };
 
 /**
- * Check rate limits for incoming requests
- * Returns either null (allowed) or a 429 Response (rate limited)
+ * Build a 429 Rate Limit Exceeded response with the appropriate limit value
+ */
+function buildRateLimitResponse(limit: number): Response {
+	const now = Math.floor(Date.now() / 1000);
+	const resetTime = now + RATE_LIMIT_CONFIG.WINDOW_SECONDS;
+
+	return new Response(
+		JSON.stringify({
+			error: 'Rate limit exceeded',
+			message: 'Too many requests. This API is restricted to non-commercial, educational use only. Please try again later.',
+			retryAfter: RATE_LIMIT_CONFIG.WINDOW_SECONDS
+		}),
+		{
+			status: 429,
+			headers: {
+				'Content-Type': 'application/json',
+				[RATE_LIMIT_CONFIG.HEADERS.LIMIT]: limit.toString(),
+				[RATE_LIMIT_CONFIG.HEADERS.REMAINING]: '0',
+				[RATE_LIMIT_CONFIG.HEADERS.RESET]: resetTime.toString(),
+				[RATE_LIMIT_CONFIG.HEADERS.RETRY_AFTER]: RATE_LIMIT_CONFIG.WINDOW_SECONDS.toString(),
+				...corsHeaders
+			}
+		}
+	);
+}
+
+/**
+ * Check rate limits for incoming requests.
+ * All requests are checked against the global limit (30 req/min).
+ * Data-heavy endpoints (search, list, map) are additionally checked
+ * against the tighter data limit (10 req/min).
+ * Returns either null (allowed) or a 429 Response (rate limited).
  */
 async function checkRateLimit(
 	request: Request,
-	env: Env
+	env: Env,
+	isDataEndpoint: boolean = false
 ): Promise<Response | null> {
-	// Get identifier (IP address for anonymous users)
 	const identifier = request.headers.get('CF-Connecting-IP') || 'unknown';
 
-	// Create a unique key for this IP
-	const rateLimitKey = `ip:${identifier}`;
-
 	try {
-		// Check and increment rate limit
-		const { success } = await env.RATE_LIMITER.limit({ key: rateLimitKey });
-
+		// Global rate limit applies to every API request
+		const { success } = await env.RATE_LIMITER.limit({ key: `ip:${identifier}` });
 		if (!success) {
-			// Rate limit exceeded - calculate reset time
-			const now = Math.floor(Date.now() / 1000);
-			const resetTime = now + RATE_LIMIT_CONFIG.WINDOW_SECONDS;
-			const retryAfter = RATE_LIMIT_CONFIG.WINDOW_SECONDS;
-
-			return new Response(
-				JSON.stringify({
-					error: 'Rate limit exceeded',
-					message: 'Too many requests. Please try again later.',
-					retryAfter: retryAfter
-				}),
-				{
-					status: 429,
-					headers: {
-						'Content-Type': 'application/json',
-						[RATE_LIMIT_CONFIG.HEADERS.LIMIT]: RATE_LIMIT_CONFIG.REQUESTS_PER_MINUTE.toString(),
-						[RATE_LIMIT_CONFIG.HEADERS.REMAINING]: '0',
-						[RATE_LIMIT_CONFIG.HEADERS.RESET]: resetTime.toString(),
-						[RATE_LIMIT_CONFIG.HEADERS.RETRY_AFTER]: retryAfter.toString(),
-						...corsHeaders
-					}
-				}
-			);
+			return buildRateLimitResponse(RATE_LIMIT_CONFIG.REQUESTS_PER_MINUTE);
 		}
 
-		// Success - request is allowed
+		// Data endpoints have an additional, tighter per-endpoint limit
+		if (isDataEndpoint) {
+			const { success: dataSuccess } = await env.DATA_RATE_LIMITER.limit({ key: `data:ip:${identifier}` });
+			if (!dataSuccess) {
+				return buildRateLimitResponse(RATE_LIMIT_CONFIG.DATA_REQUESTS_PER_MINUTE);
+			}
+		}
+
 		return null;
 	} catch (error) {
 		// On error, allow request (fail open)
@@ -137,15 +153,16 @@ async function checkRateLimit(
 }
 
 /**
- * Add rate limit headers to successful responses
+ * Add rate limit headers to successful responses.
+ * limit should be the effective limit for the endpoint tier.
  */
-function addRateLimitHeaders(response: Response, remaining: number = 95): Response {
+function addRateLimitHeaders(response: Response, limit: number): Response {
 	const now = Math.floor(Date.now() / 1000);
 	const resetTime = now + RATE_LIMIT_CONFIG.WINDOW_SECONDS;
 
 	const headers = new Headers(response.headers);
-	headers.set(RATE_LIMIT_CONFIG.HEADERS.LIMIT, RATE_LIMIT_CONFIG.REQUESTS_PER_MINUTE.toString());
-	headers.set(RATE_LIMIT_CONFIG.HEADERS.REMAINING, Math.max(0, remaining).toString());
+	headers.set(RATE_LIMIT_CONFIG.HEADERS.LIMIT, limit.toString());
+	headers.set(RATE_LIMIT_CONFIG.HEADERS.REMAINING, (limit - 1).toString());
 	headers.set(RATE_LIMIT_CONFIG.HEADERS.RESET, resetTime.toString());
 
 	return new Response(response.body, {
@@ -156,8 +173,12 @@ function addRateLimitHeaders(response: Response, remaining: number = 95): Respon
 }
 
 async function handleApiRequest(request: Request, env: Env, url: URL, path: string): Promise<Response> {
+	// Data-heavy endpoints get the tighter per-endpoint rate limit on top of the global limit
+	const isDataEndpoint = path === '/api/search' || path === '/api/places' || path === '/api/map';
+	const activeLimit = isDataEndpoint ? RATE_LIMIT_CONFIG.DATA_REQUESTS_PER_MINUTE : RATE_LIMIT_CONFIG.REQUESTS_PER_MINUTE;
+
 	// Check rate limit FIRST (before any processing)
-	const rateLimitResponse = await checkRateLimit(request, env);
+	const rateLimitResponse = await checkRateLimit(request, env, isDataEndpoint);
 	if (rateLimitResponse) {
 		return rateLimitResponse; // Return 429 response
 	}
@@ -169,7 +190,7 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 			const province = url.searchParams.get('province');
 			const type = url.searchParams.get('type');
 			const random = url.searchParams.get('random') === 'true';
-			const limit = parseInt(url.searchParams.get('limit') || '100');
+			const limit = Math.min(parseInt(url.searchParams.get('limit') || '50') || 50, 50);
 			const offset = parseInt(url.searchParams.get('offset') || '0');
 
 			let query = `SELECT DISTINCT
@@ -211,7 +232,7 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 			params.push(limit, offset);
 
 			const { results } = await env.DB.prepare(query).bind(...params).all();
-			return addRateLimitHeaders(jsonResponse({ places: results, count: results.length }));
+			return addRateLimitHeaders(jsonResponse({ places: results, count: results.length }), activeLimit);
 		}
 
 		// GET /api/places/:id - Get specific place
@@ -224,7 +245,7 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 				`).bind(id, lang).first();
 
 			if (!place) {
-				return addRateLimitHeaders(jsonResponse({ error: 'Place not found' }, 404));
+				return addRateLimitHeaders(jsonResponse({ error: 'Place not found' }, 404), activeLimit);
 			}
 
 			// Get images for this place
@@ -234,14 +255,14 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 					ORDER BY display_order
 				`).bind(id).all();
 
-			return addRateLimitHeaders(jsonResponse({ place, images }));
+			return addRateLimitHeaders(jsonResponse({ place, images }), activeLimit);
 		}
 
 		// GET /api/search - Unified search with filters
 		if (path === '/api/search' && request.method === 'GET') {
 			const q = url.searchParams.get('q') || '';
 			const lang = url.searchParams.get('lang') || 'en';
-			const limit = parseInt(url.searchParams.get('limit') || '50');
+			const limit = Math.min(parseInt(url.searchParams.get('limit') || '50') || 50, 50);
 			const offset = parseInt(url.searchParams.get('offset') || '0');
 
 			// Filters
@@ -349,7 +370,7 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 			const dataParams = [...params, limit, offset];
 			const { results } = await env.DB.prepare(query).bind(...dataParams).all();
 
-			return addRateLimitHeaders(jsonResponse({ results, count: results.length, total }));
+			return addRateLimitHeaders(jsonResponse({ results, count: results.length, total }), activeLimit);
 		}
 
 		// GET /api/filters - Get options for filters
@@ -393,7 +414,7 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 				types: types.results,
 				jurisdictions: jurisdictions.results,
 				themes: themes.results
-			}));
+			}), activeLimit);
 		}
 
 		// GET /api/map - Get places with coordinates (for map view)
@@ -414,10 +435,10 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 				params.push(minLat, maxLat, minLng, maxLng);
 			}
 
-			query += ` LIMIT 100000`;
+			query += ` LIMIT 500`;
 
 			const { results } = await env.DB.prepare(query).bind(...params).all();
-			return addRateLimitHeaders(jsonResponse({ places: results, count: results.length }));
+			return addRateLimitHeaders(jsonResponse({ places: results, count: results.length }), activeLimit);
 		}
 
 		// GET /api/provinces - Get list of provinces
@@ -432,7 +453,7 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 					ORDER BY province
 				`).bind(lang).all();
 
-			return addRateLimitHeaders(jsonResponse({ provinces: results }));
+			return addRateLimitHeaders(jsonResponse({ provinces: results }), activeLimit);
 		}
 
 		// GET /api/stats - Get statistics
@@ -471,7 +492,7 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 				provinces: provinces?.count || 0,
 				totalImages: totalImages?.count || 0,
 				themes: themes?.count || 0,
-			}));
+			}), activeLimit);
 		}
 
 		// Default response
@@ -479,20 +500,20 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 			message: 'Canadian Historic Places API',
 			version: '1.0.0',
 			endpoints: [
-				'GET /api/places?lang=en&province=Ontario&limit=100&offset=0',
+				'GET /api/places?lang=en&province=Ontario&limit=50&offset=0',
 				'GET /api/places/:id?lang=en',
 				'GET /api/search?q=term&lang=en&limit=50',
 				'GET /api/map?lang=en&bounds=minLat,minLng,maxLat,maxLng',
 				'GET /api/provinces?lang=en',
 				'GET /api/stats?lang=en',
 			],
-		}));
+		}), activeLimit);
 
 	} catch (error) {
 		console.error('API Error:', error);
 		return addRateLimitHeaders(jsonResponse({
 			error: 'Internal server error',
 			message: error instanceof Error ? error.message : 'Unknown error'
-		}, 500));
+		}, 500), activeLimit);
 	}
 }

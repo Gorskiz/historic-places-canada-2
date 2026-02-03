@@ -15,17 +15,22 @@ info:
     - **Full-Text Search**: Search across names, descriptions, architects, and more
     - **Advanced Filters**: Filter by province, type, theme, date range, and more
 
+    ## Usage Policy
+    This data is licensed for **non-commercial, educational use only**. All uses must include attribution to the Canadian Register of Historic Places.
+
     ## Rate Limiting
-    - **Anonymous Users**: 100 requests per minute per IP address
+    Strict rate limits are enforced to protect copyrighted source data:
+    - **General Endpoints** (stats, provinces, filters, individual places): 30 requests per minute per IP
+    - **Data Endpoints** (search, place listings, map): 10 requests per minute per IP
     - Rate limit headers included in all responses:
-      - `X-RateLimit-Limit`: Maximum requests per window
+      - `X-RateLimit-Limit`: Maximum requests per window for the endpoint tier
       - `X-RateLimit-Remaining`: Requests remaining in current window
       - `X-RateLimit-Reset`: Unix timestamp when the limit resets
     - When limit exceeded, returns `429 Too Many Requests` with `Retry-After` header
 
     ## Data Attribution
-    Data sourced from Parks Canada's Historic Places database. Please attribute:
-    > "Data from Historic Places Canada, Parks Canada"
+    Data sourced from the Canadian Register of Historic Places (historicplaces.ca), Government of Canada. Please attribute:
+    > "Data sourced from the Canadian Register of Historic Places (historicplaces.ca), Government of Canada."
 
     ## Support
     For issues or questions, visit: https://github.com/Gorskiz/historic-places-canada-2
@@ -34,7 +39,7 @@ info:
     name: API Support
     url: https://historicplaces2.workers.dev
   license:
-    name: Open Data
+    name: Non-Commercial, Educational Use Only
     url: https://open.canada.ca/en/open-government-licence-canada
 
 servers:
@@ -124,8 +129,8 @@ paths:
           schema:
             type: integer
             minimum: 1
-            maximum: 1000
-            default: 100
+            maximum: 50
+            default: 50
         - name: offset
           in: query
           description: Number of results to skip (for pagination)
@@ -377,7 +382,7 @@ paths:
           schema:
             type: integer
             minimum: 1
-            maximum: 1000
+            maximum: 50
             default: 50
         - name: offset
           in: query
