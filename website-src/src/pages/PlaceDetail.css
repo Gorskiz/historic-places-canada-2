@@ -159,6 +159,13 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
+.overlay-source {
+  margin: 0.5rem 0 0;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+}
+
 .overlay-controls {
   margin-top: 1rem;
   display: flex;
