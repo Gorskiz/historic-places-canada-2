@@ -11,7 +11,7 @@ We rebuilt the entire experience from the ground up to be faster, more beautiful
 This is a full-stack preservation platform that serves:
 
 1.  **A Modern Web Application**: A lightning-fast, responsive SPA (Single Page Application) that makes exploring history a premium experience.
-2.  **A Public API**: A robust backend that powers the site and provides open access to the data for researchers and developers.
+2.  **A Public API**: A robust backend that powers the site and provides access to the data for educational and research use by researchers and developers.
 3.  **The Complete Dataset**: We've cleaned and indexed the original data, including descriptions, architectural details, and over **22,000+** images.
 
 **[Explore the Live Site](https://historicplaces2.ca/)**
@@ -24,7 +24,7 @@ We've implemented features that modern users expect:
 *   **🗺️ Interactive Map**: visualize historic sites across all 13 provinces and territories on a performant, clustering map.
 *   **🗣️ Fully Bilingual**: Native support for **English** and **French**, just like the original, but faster.
 *   **📱 Mobile First**: A responsive design that looks great on your phone, tablet, or desktop.
-*   **🔓 Open Data**: The entire database is available for download. We believe history belongs to everyone.
+*   **🔓 Open Data**: The entire database is available for download for educational and research use. Attribution to the Canadian Register of Historic Places is required; commercial use is not permitted.
 
 ## 🛠️ Tech Stack
 
@@ -81,9 +81,15 @@ The code in this repository is released under the MIT License. Feel free to use,
 
 ### Data
 
-The original data is from Parks Canada and the Canadian Register of Historic Places. This project preserves and provides access to public heritage data.
+The data in this repository — including the downloadable database and all records served by the API — originates from the **Canadian Register of Historic Places**, maintained by the Government of Canada.
 
-This project utilizes data from the Canadian Register of Historic Places (historicplaces.ca), provided by the Government of Canada. This data is available under the [Open Government Licence - Canada](https://open.canada.ca/en/open-government-licence-canada).
+**Use of this data is subject to the following conditions:**
+
+1.  **Educational and Research Use Only.** You may use the data solely for educational, academic, journalistic, or non-commercial research purposes.
+2.  **No Commercial Use.** You may not use the data, or any work derived from the data, for any commercial purpose whatsoever, including but not limited to selling, advertising, or monetising access to the data in any form.
+3.  **Attribution Required.** Any use of the data must include clear attribution to the **Canadian Register of Historic Places** as the original source.
+
+> The underlying data was originally made available by the Government of Canada under the [Open Government Licence - Canada](https://open.canada.ca/en/open-government-licence-canada), which is more permissive than the terms above. The restrictions listed here apply to the data as curated and presented in this project.
 
 ---
 *Preserving the past, building for the future.*

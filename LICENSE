@@ -19,3 +19,28 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+---
+
+## Data License
+
+The data served by this project — including the downloadable database and all
+records accessible through the API — originates from the Canadian Register of
+Historic Places, maintained by the Government of Canada.
+
+Use of this data is subject to the following conditions:
+
+1. Educational and Research Use Only. You may use the data solely for
+   educational, academic, journalistic, or non-commercial research purposes.
+
+2. No Commercial Use. You may not use the data, or any work derived from the
+   data, for any commercial purpose whatsoever, including but not limited to
+   selling, advertising, or monetising access to the data in any form.
+
+3. Attribution Required. Any use of the data must include clear attribution to
+   the Canadian Register of Historic Places as the original source of the data.
+
+The underlying data was originally made available by the Government of Canada
+under the Open Government Licence - Canada, which is more permissive than the
+terms above. The restrictions listed here apply to the data as curated and
+presented in this project.
