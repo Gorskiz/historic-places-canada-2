@@ -403,7 +403,7 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 
 			const themes = await env.DB.prepare(`
 				SELECT TRIM(value) as theme, COUNT(*) as count
-				FROM places, json_each('["' || REPLACE(REPLACE(themes, ', ', '","'), ',', '","') || '"]')
+				FROM places, json_each('[' || REPLACE(json_quote(themes), ',', '","') || ']')
 				WHERE language = ? AND themes IS NOT NULL AND themes != ''
 				GROUP BY theme
 				ORDER BY count DESC
@@ -481,7 +481,7 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 					SELECT COUNT(DISTINCT theme) as count
 					FROM (
 						SELECT TRIM(value) as theme
-						FROM places, json_each('["' || REPLACE(REPLACE(themes, ', ', '","'), ',', '","') || '"]')
+						FROM places, json_each('[' || REPLACE(json_quote(themes), ',', '","') || ']')
 						WHERE language = ? AND themes IS NOT NULL AND themes != ''
 					)
 				`).bind(lang).first();

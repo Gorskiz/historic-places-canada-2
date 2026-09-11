@@ -62,6 +62,10 @@ Want to help improve the site? Here is how to get the full stack running on your
 
 ## 🤝 Contributing
 
+The [issue #9 recovery data and instructions](data/recovery/issue-9/README.md)
+provide recovered missing records, a resumable scraper, and an additive database
+import. Database imports are separate from application deployments.
+
 This is a **community-led** project. We need your help to keep it alive and growing.
 
 *   **Developers**: We need help with Map UI improvements, search optimizations, and accessibility fixes.

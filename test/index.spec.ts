@@ -88,6 +88,25 @@ describe('Canadian Historic Places API', () => {
 		expect(await empty.json()).toEqual({ count: 0, places: [] });
 	});
 
+	it('serves filters and statistics for recovered comma-separated themes', async () => {
+		await env.DB.batch([
+			env.DB.prepare('INSERT INTO places (id, language, themes) VALUES (?, ?, ?)').bind(1, 'en', 'Developing Economies, Trade and Commerce'),
+			env.DB.prepare('INSERT INTO places (id, language, themes) VALUES (?, ?, ?)').bind(2, 'en', 'Trade and Commerce,The "Modern" Era'),
+		]);
+		const filters = await SELF.fetch('http://example.com/api/filters');
+		expect(filters.status).toBe(200);
+		const data = await filters.json<{ themes: { theme: string; count: number }[] }>();
+		expect(data.themes).toHaveLength(3);
+		expect(data.themes).toEqual(expect.arrayContaining([
+			{ theme: 'Developing Economies', count: 1 },
+			{ theme: 'The "Modern" Era', count: 1 },
+			{ theme: 'Trade and Commerce', count: 2 },
+		]));
+		const stats = await SELF.fetch('http://example.com/api/stats');
+		expect(stats.status).toBe(200);
+		expect(await stats.json()).toMatchObject({ totalPlaces: 2, themes: 3 });
+	});
+
 	it('enforces the data rate limit on the map endpoint', async () => {
 		const options = { headers: { 'CF-Connecting-IP': '192.0.2.10' } };
 		for (let i = 0; i < 10; i++) {
