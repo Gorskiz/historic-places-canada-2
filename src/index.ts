@@ -435,8 +435,8 @@ async function handleApiRequest(request: Request, env: Env, url: URL, path: stri
 				params.push(minLat, maxLat, minLng, maxLng);
 			}
 
-			query += ` LIMIT 500`;
-
+			// Return the full, lightweight marker set. The frontend clusters markers
+			// and searches this set locally, so a row cap silently hides places.
 			const { results } = await env.DB.prepare(query).bind(...params).all();
 			return addRateLimitHeaders(jsonResponse({ places: results, count: results.length }), activeLimit);
 		}

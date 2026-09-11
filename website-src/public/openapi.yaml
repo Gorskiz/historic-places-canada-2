@@ -524,6 +524,8 @@ paths:
       summary: Get places for map display
       description: |
         Retrieve places with geographic coordinates, optimized for map visualizations.
+        Returns all matching places in the selected language, without a row limit.
+        Places missing latitude or longitude are excluded.
         Optionally filter by geographic bounds.
 
         ## Example Usage
