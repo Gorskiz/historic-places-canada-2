@@ -99,6 +99,10 @@ web_modules/
 .cache
 .parcel-cache
 
+# Python recovery scripts
+__pycache__/
+*.pyc
+
 # Next.js build output
 
 .next
