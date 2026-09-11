@@ -5,10 +5,20 @@ import './ApiDocs.css'
 
 function ApiDocs({ language }) {
   const [activeTab, setActiveTab] = useState('overview')
+  const [redocReady, setRedocReady] = useState(Boolean(window.Redoc))
+
+  useEffect(() => {
+    // The page can render before the deferred documentation script arrives.
+    const script = document.getElementById('api-reference-script')
+    const onLoad = () => setRedocReady(Boolean(window.Redoc))
+    onLoad()
+    script?.addEventListener('load', onLoad)
+    return () => script?.removeEventListener('load', onLoad)
+  }, [])
 
   useEffect(() => {
     // Initialize ReDoc when the reference tab is active
-    if (activeTab === 'reference' && window.Redoc) {
+    if (activeTab === 'reference' && redocReady) {
       const container = document.getElementById('redoc-container')
       if (container) {
         // Clear any previous content
@@ -142,7 +152,7 @@ function ApiDocs({ language }) {
           })
       }
     }
-  }, [activeTab])
+  }, [activeTab, redocReady])
 
   const text = {
     en: {

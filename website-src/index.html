@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/webp" href="/maple-leaf-icon.webp" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preload" as="image" href="/featured/8873.webp" fetchpriority="high" />
     <meta name="description" content="Explore over 11,000 historic places across Canada. An open-source community project preserving Canadian architectural and cultural heritage." />
     <meta name="keywords" content="Canadian heritage, historic places, architecture, Parks Canada, cultural heritage, historic sites Canada" />
     <meta name="author" content="Historic Places Canada Community" />
@@ -19,18 +20,13 @@
     <link rel="alternate" hreflang="en" href="/" />
     <link rel="alternate" hreflang="fr" href="/?lang=fr" />
 
-    <!-- Preconnect to external resources for faster loading -->
-    <link rel="preconnect" href="https://unpkg.com" />
-    <link rel="dns-prefetch" href="https://unpkg.com" />
-
     <title>Historic Places Canada | Lieux patrimoniaux du Canada</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
 
     <!-- ReDoc for API documentation -->
-    <script src="https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"></script>
+    <script id="api-reference-script" defer src="https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"></script>
   </body>
 </html>

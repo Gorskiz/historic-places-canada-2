@@ -1,0 +1,108 @@
+.featured-hero {
+  --archive-ink: #263e44;
+  --archive-muted: #53666b;
+  --archive-red: #982c3e;
+  background: #edf1f2;
+  color: var(--archive-ink);
+  padding-top: clamp(2rem, 4vw, 4rem);
+}
+
+.featured-hero .featured-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr);
+  align-items: center;
+  gap: clamp(2rem, 6vw, 5.5rem);
+  padding-bottom: 3rem;
+}
+
+.featured-introduction { padding-bottom: 4rem; }
+
+.featured-introduction h1 {
+  font-family: 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+  font-size: clamp(2.6rem, 4.5vw, 4.5rem);
+  font-weight: 400;
+  line-height: 1.06;
+  letter-spacing: -0.045em;
+  max-width: 13ch;
+  text-wrap: balance;
+}
+
+.featured-description {
+  max-width: 39ch;
+  margin-top: 1.75rem;
+  color: var(--archive-muted);
+  font-size: 1.0625rem;
+  line-height: 1.8;
+}
+
+.featured-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1.25rem 1.5rem; margin-top: 2rem; }
+.featured-explore { background: var(--archive-red); color: #fff; padding: 0.85rem 1.3rem; border-radius: 4px; font-weight: 600; }
+.featured-explore:hover { background: #7d2030; color: #fff; text-decoration: none; }
+.featured-map { display: inline-flex; align-items: center; gap: 0.55rem; color: var(--archive-ink); font-weight: 500; padding-block: 0.65rem; }
+.featured-map:hover { color: var(--archive-red); }
+
+.featured-gallery { min-width: 0; }
+.featured-gallery-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 0.75rem; font-size: 0.875rem; font-weight: 500; }
+.featured-navigation { display: flex; align-items: center; gap: 0.25rem; }
+.featured-position { font-size: 0.8125rem; font-variant-numeric: tabular-nums; margin-right: 0.65rem; color: var(--archive-muted); }
+.featured-navigation button { display: grid; place-items: center; width: 44px; height: 44px; background: transparent; color: var(--archive-ink); border: 1px solid #c6d0d3; border-radius: 50%; cursor: pointer; }
+.featured-navigation button:hover { background: #fff; border-color: var(--archive-ink); }
+
+.featured-record { margin: 0; }
+.featured-photo-mount {
+  display: grid;
+  place-items: center;
+  height: clamp(280px, 29vw, 410px);
+  padding: 1rem;
+  background: #fff;
+  border: 1px solid #dfe5e6;
+  border-radius: 3px;
+}
+
+/* scale-down preserves the whole photograph and never enlarges its source pixels. */
+.featured-photo { width: 100%; height: 100%; min-height: 0; object-fit: scale-down; }
+.featured-hero[data-format='portrait'] .featured-photo-mount { height: 440px; }
+.featured-hero[data-format='panorama'] .featured-photo-mount { height: 280px; }
+.featured-record[data-compact] .featured-photo-mount { height: 280px; }
+.featured-photo-mount > p { color: var(--archive-muted); }
+.featured-caption { padding: 1.1rem 0 0; }
+.featured-location { font-size: 0.8125rem; color: var(--archive-muted); margin-bottom: 0.35rem; }
+.featured-caption h2 { font-family: 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Palatino, serif; font-weight: 400; font-size: clamp(1.4rem, 2.1vw, 1.9rem); line-height: 1.25; overflow-wrap: anywhere; text-wrap: pretty; }
+.featured-caption h2[data-long] { font-size: clamp(1.25rem, 1.8vw, 1.6rem); }
+.featured-caption h2 a { color: var(--archive-ink); }
+.featured-record-link { display: inline-flex; align-items: center; gap: 0.6rem; padding-block: 0.55rem; color: var(--archive-red); font-size: 0.875rem; font-weight: 600; }
+.featured-credit { color: var(--archive-muted); font-size: 0.6875rem; line-height: 1.5; max-width: 75ch; }
+.featured-thumbnails { display: flex; gap: 0.7rem; margin-top: 1rem; }
+.featured-thumbnails button { width: 64px; height: 52px; padding: 4px; background: #fff; border: 1px solid #c6d0d3; border-radius: 2px; cursor: pointer; }
+.featured-thumbnails button[aria-pressed='true'] { border: 2px solid var(--archive-red); padding: 3px; }
+.featured-thumbnails button:hover { border-color: var(--archive-ink); }
+.featured-thumbnails img { width: 100%; height: 100%; object-fit: scale-down; }
+.featured-hero :is(a, button):focus-visible { outline: 3px solid var(--archive-red); outline-offset: 4px; }
+
+.featured-hero .featured-collection-note { display: flex; align-items: center; justify-content: space-between; gap: 1rem 2rem; padding-block: 1.3rem; border-top: 1px solid #cdd6d8; color: var(--archive-muted); font-size: 0.75rem; }
+.featured-collection-note > p { max-width: 30ch; }
+.featured-collection-note ul { display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; list-style: none; }
+.featured-collection-note strong { color: var(--archive-ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+@media (min-width: 1400px) { .featured-hero .featured-hero-grid { gap: 6rem; } }
+@media (max-width: 900px) {
+  .featured-hero .featured-hero-grid { gap: 2rem; }
+  .featured-introduction h1 { font-size: 3rem; }
+  .featured-introduction { padding-bottom: 2rem; }
+  .featured-actions { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+  .featured-hero .featured-collection-note { align-items: flex-start; }
+}
+@media (max-width: 680px) {
+  .featured-hero .featured-hero-grid { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; padding-bottom: 2rem; }
+  .featured-introduction { padding-bottom: 0; }
+  .featured-introduction h1 { font-size: clamp(2.6rem, 9vw, 3.5rem); max-width: 16ch; }
+  .featured-description { max-width: 48ch; margin-top: 1.2rem; font-size: 1rem; line-height: 1.65; }
+  .featured-actions { flex-direction: row; align-items: center; gap: 0.5rem 1.25rem; margin-top: 1.25rem; }
+  .featured-explore, .featured-map { font-size: 0.875rem; }
+  .featured-photo-mount { height: clamp(240px, 72vw, 390px); padding: 0.75rem; }
+  .featured-hero[data-format='portrait'] .featured-photo-mount { height: 380px; }
+  .featured-hero[data-format='panorama'] .featured-photo-mount { height: 220px; }
+  .featured-hero .featured-collection-note { flex-direction: column; gap: 0.6rem; }
+  .featured-collection-note > p { max-width: none; }
+  .featured-collection-note ul { gap: 0.4rem 1rem; }
+}

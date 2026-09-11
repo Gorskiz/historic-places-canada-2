@@ -1,0 +1,94 @@
+[
+  {
+    "id": 8873,
+    "image": "/featured/8873.webp",
+    "width": 500,
+    "height": 375,
+    "originalImage": "https://images.historicplaces2.ca/8873_32527_Large.webp",
+    "en": {
+      "name": "Middlesex County Court House",
+      "municipality": "London",
+      "province": "Ontario",
+      "caption": "North east view showing the entrance to the Middlesex County Court House. – 2004; OHT, 2004",
+      "source": "https://www.historicplaces.ca/en/rep-reg/place-lieu.aspx?id=8873",
+      "captionLanguage": "en"
+    },
+    "fr": {
+      "name": "Middlesex County Court House",
+      "municipality": "London",
+      "province": "Ontario",
+      "caption": "North east view showing the entrance to the Middlesex County Court House. – 2004; OHT, 2004",
+      "source": "https://www.historicplaces.ca/fr/rep-reg/place-lieu.aspx?id=8873",
+      "captionLanguage": "en"
+    }
+  },
+  {
+    "id": 2342,
+    "image": "/featured/2342.webp",
+    "width": 500,
+    "height": 375,
+    "originalImage": "https://images.historicplaces2.ca/2342_4406_Large.webp",
+    "en": {
+      "name": "Corner Brook Public Building",
+      "municipality": "Corner Brook",
+      "province": "Newfoundland and Labrador",
+      "caption": "View of the front facade of the Corner Brook Public Building, Corner Brook, NL.; Heritage Foundation of Newfoundland and Labrador, 2005",
+      "source": "https://www.historicplaces.ca/en/rep-reg/place-lieu.aspx?id=2342",
+      "captionLanguage": "en"
+    },
+    "fr": {
+      "name": "Corner Brook Public Building",
+      "municipality": "Corner Brook",
+      "province": "Terre-Neuve et Labrador",
+      "caption": "View of the front facade of the Corner Brook Public Building, Corner Brook, NL.; Heritage Foundation of Newfoundland and Labrador, 2005",
+      "source": "https://www.historicplaces.ca/fr/rep-reg/place-lieu.aspx?id=2342",
+      "captionLanguage": "en"
+    }
+  },
+  {
+    "id": 5771,
+    "image": "/featured/5771.webp",
+    "width": 500,
+    "height": 367,
+    "originalImage": "https://images.historicplaces2.ca/5771_15936_Large.webp",
+    "en": {
+      "name": "Royal Bank",
+      "municipality": "Port Moody",
+      "province": "British Columbia",
+      "caption": "Exterior view of the Royal Bank; City of Port Moody, 2004",
+      "source": "https://www.historicplaces.ca/en/rep-reg/place-lieu.aspx?id=5771",
+      "captionLanguage": "en"
+    },
+    "fr": {
+      "name": "Royal Bank",
+      "municipality": "Port Moody",
+      "province": "Colombie-Britannique",
+      "caption": "Exterior view of the Royal Bank; City of Port Moody, 2004",
+      "source": "https://www.historicplaces.ca/fr/rep-reg/place-lieu.aspx?id=5771",
+      "captionLanguage": "en"
+    }
+  },
+  {
+    "id": 10465,
+    "image": "/featured/10465.webp",
+    "width": 500,
+    "height": 349,
+    "originalImage": "https://images.historicplaces2.ca/10465_70192_Large.webp",
+    "en": {
+      "name": "Casemates",
+      "municipality": "Lévis",
+      "province": "Quebec",
+      "caption": "View of the Casemates, showing its façade with alternating doors and windows, arranged according to the needs of the program.; Agence Parcs Canada / Parks Canada Agency.",
+      "source": "https://www.historicplaces.ca/en/rep-reg/place-lieu.aspx?id=10465",
+      "captionLanguage": "en"
+    },
+    "fr": {
+      "name": "Casemates",
+      "municipality": "Lévis",
+      "province": "Québec",
+      "caption": "View of the Casemates, showing its façade with alternating doors and windows, arranged according to the needs of the program.; Agence Parcs Canada / Parks Canada Agency.",
+      "source": "https://www.historicplaces.ca/fr/rep-reg/place-lieu.aspx?id=10465",
+      "captionLanguage": "en"
+    }
+  }
+]
